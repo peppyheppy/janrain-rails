@@ -101,29 +101,19 @@ Janrain::Configuration
 
 # TODO: 
 
-outside in/ front to back
+Outside in/ front to back
 
-* setup artiface, rails app
-
-* create user from oauth request
-
-* login user from oauth request
-
-* update user from oauth request
-
-* create the authenticated!
-
-  ** setup the authenticated case
-  ** setup not authenticated case
-
-* create the require_admin
-
-  ** setup the authenticated case
-  ** setup the not authenticated case
-
-* create configuration for capture
-
-* create url helpers
-
-* create create the sign out case
+  * setup artiface, rails app
+  * create user from oauth request
+  * login user from oauth request
+  * update user from oauth request
+  * create the authenticated!
+    ** setup the authenticated case
+    ** setup not authenticated case
+  * create the require_admin
+    ** setup the authenticated case
+    ** setup the not authenticated case
+  * create configuration for capture
+  * create url helpers
+  * create create the sign out case
 
