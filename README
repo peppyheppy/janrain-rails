@@ -8,10 +8,10 @@ We will have links for register and profile as well.
 
 We will need to create a user model that will contain required fields, the
 capture_id, and any other data relevant to the user that is site specific, or
-that will be loaded into JanRain's capture database.
+that will be loaded into Janrain's capture database.
 
 class User < ActiveRecord::Base
-  include JanRain::Capture::User
+  include Janrain::Capture::User
 end
 
 User.find_by_capture_id(7) # => 
@@ -24,7 +24,7 @@ We will need to implement the authentication on controllers so we can ensure tha
 users are logged in and have permission. 
 
 class ApplicationController < ActionController::Base
-  include JanRain::Auth
+  include Janrain::Auth
 end
 
 class MusicController < ApplicationController
@@ -68,4 +68,24 @@ development:
     secret: 'sssshh-dont-tell-anyone'
     endpoint: 'https://asite.dev.janraincapture.com'
 
+Janrain::Capture::User
+Janrain::Session
+Janrain::UrlHelpers
+Janrain::Configuration
+
+TODO: (outside in/ front to back)
+* create basic gem configuration
+* setup rspec, artiface, rails app
+* create user from oauth request
+* login user from oauth request
+* update user from oauth request
+* create the authenticated!
+** setup the authenticated case
+** setup not authenticated case
+* create the require_admin
+** setup the authenticated case
+** setup the not authenticated case
+* create configuration for capture
+* create url helpers
+* create create the sign out case
 
