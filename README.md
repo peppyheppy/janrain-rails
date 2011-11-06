@@ -1,3 +1,5 @@
+# Overview
+
 Look in the auth_controller to see the current playground of code. At some point
 soon it will be refactored for prime time business!
 
@@ -10,81 +12,118 @@ We will need to create a user model that will contain required fields, the
 capture_id, and any other data relevant to the user that is site specific, or
 that will be loaded into Janrain's capture database.
 
-class User < ActiveRecord::Base
-  include Janrain::Capture::User
-end
+# User Model
 
-User.find_by_capture_id(7) # => 
-@user = User.find(3) # => internal id that is used for local database
-@user.capture_status
-@user.logged_in?
-@user.refresh_login!
+    class User < ActiveRecord::Base
+      include Janrain::Capture::User
+    end
+
+User capture methods:
+
+    User.find_by_capture_id(7) # => 
+    @user = User.find(3) # => internal id that is used for local database
+    @user.capture_status
+    @user.logged_in?
+    @user.refresh_login!
+
+# Controllers
 
 We will need to implement the authentication on controllers so we can ensure that
 users are logged in and have permission. 
 
-class ApplicationController < ActionController::Base
-  include Janrain::Auth
-end
+Simple controller integration:
 
-class MusicController < ApplicationController
-  before_filter :authenticate_user! # just like devise
+    class ApplicationController < ActionController::Base
+      include Janrain::Auth
+    end
 
-  def index
-    # same methods and api as devise.
-    return if logged_in? and current_user.email
-  end
-end
+Familiar authentication API's:
 
-class Roadie::MusicController < ApplicationController
-  before_filter :authenticate_user! # just like devise
-  before_filter :require_admin! # enforce admin permissions
-end
+    class MusicController < ApplicationController
+      before_filter :authenticate_user! # just like devise
 
-# url helpers
-janrain_login_url
-janrain_register_url
-janrain_edit_profile_url(current_user)
+      def index
+        # same methods and api as devise.
+        return if logged_in? and current_user.email
+      end
+    end
 
-class AuthController < ApplicationController
-  def new
-    # goes to a page that opens up the sign in/sign up modal
-  end
+Admin permission enforcement:
 
-  def create
-    # processes new and existing users and signs them in
-  end
+    class Roadie::MusicController < ApplicationController
+      before_filter :authenticate_user! # just like devise
+      before_filter :require_admin! # enforce admin permissions
+    end
 
-  def destroy
-    # signs a user out
-  end
-end
+# Url Helpers
 
-# configuration: config/janrain.yml
+Url helpers (used for fancybox/iframed, etc):
 
-development:
-  capture:
-    client_id: 'kjhgkjhgdw7qd8qw873yrgukegw'
-    secret: 'sssshh-dont-tell-anyone'
-    endpoint: 'https://asite.dev.janraincapture.com'
+    janrain_login_url
+    janrain_register_url
+    janrain_edit_profile_url(current_user)
+
+# Session mangement
+
+    class AuthController < ApplicationController
+      def new
+        # goes to a page that opens up the sign in/sign up modal
+      end
+
+      def create
+        # processes new and existing users and signs them in
+      end
+
+      def destroy
+        # signs a user out
+      end
+    end
+
+# configuration 
+
+Simple configuration (config/janrain.yml):
+
+    development:
+      capture:
+        client_id: 'kjhgkjhgdw7qd8qw873yrgukegw'
+        secret: 'sssshh-dont-tell-anyone'
+        endpoint: 'https://asite.dev.janraincapture.com'
+
+## Possible Module Organization
 
 Janrain::Capture::User
+
 Janrain::Session
+
 Janrain::UrlHelpers
+
 Janrain::Configuration
 
-TODO: (outside in/ front to back)
+# TODO: 
+
+outside in/ front to back
+
 * setup artiface, rails app
+
 * create user from oauth request
+
 * login user from oauth request
+
 * update user from oauth request
+
 * create the authenticated!
-** setup the authenticated case
-** setup not authenticated case
+
+  ** setup the authenticated case
+  ** setup not authenticated case
+
 * create the require_admin
-** setup the authenticated case
-** setup the not authenticated case
+
+  ** setup the authenticated case
+  ** setup the not authenticated case
+
 * create configuration for capture
+
 * create url helpers
+
 * create create the sign out case
 
