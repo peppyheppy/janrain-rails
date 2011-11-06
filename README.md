@@ -74,8 +74,7 @@ Janrain::UrlHelpers
 Janrain::Configuration
 
 TODO: (outside in/ front to back)
-* create basic gem configuration
-* setup rspec, artiface, rails app
+* setup artiface, rails app
 * create user from oauth request
 * login user from oauth request
 * update user from oauth request
