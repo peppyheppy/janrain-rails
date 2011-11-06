@@ -119,6 +119,6 @@ Outside in/ front to back
 
 # Janrain Documentation
 
-https://janraincapture.com/docs/integration_guide.html
-https://janraincapture.com/docs/
+  * [Integration Guide](https://janraincapture.com/docs/integration_guide.html)
+  * [API Documentation](https://janraincapture.com/docs/)
 
