@@ -117,3 +117,8 @@ Outside in/ front to back
   * create url helpers
   * create create the sign out case
 
+# Janrain Documentation
+
+https://janraincapture.com/docs/integration_guide.html
+https://janraincapture.com/docs/
+
