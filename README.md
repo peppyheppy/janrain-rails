@@ -20,11 +20,11 @@ that will be loaded into Janrain's capture database.
 
 User capture methods:
 
-    User.find_by_capture_id(7) # => 
-    @user = User.find(3) # => internal id that is used for local database
-    @user.capture_status
-    @user.logged_in?
-    @user.refresh_login!
+    User#find_by_capture_id(7) # => 
+    User#find(3) # => internal id that is used for local database
+    User#capture_status
+    User#logged_in?
+    User#refresh_login!
 
 Local User model properties:
 
