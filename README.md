@@ -26,6 +26,13 @@ User capture methods:
     @user.logged_in?
     @user.refresh_login!
 
+Local User model properties:
+
+    User#id # => the local active record id used for relations
+    User#capture_id # => the capture id used for mapping local records with Janrain
+    User#any_local_field # => a local field that is not shared accross federated apps
+    User#display_name # => a local cache for the capture value that will be updated on each profile request.
+
 # Controllers
 
 We will need to implement the authentication on controllers so we can ensure that
