@@ -38,14 +38,24 @@ GEM
       multi_json (~> 1.0)
     archive-tar-minitar (0.5.2)
     arel (2.2.1)
+    artifice (0.6)
+      rack-test
     bitfields (0.4.0)
     builder (3.0.0)
     columnize (0.3.4)
     diff-lcs (1.1.3)
     erubis (2.7.0)
+    ffi (1.0.10)
     generator_spec (0.8.4)
       rails (>= 3.0, < 4.0)
       rspec-rails
+    guard (0.8.8)
+      thor (~> 0.14.6)
+    guard-bundler (0.1.3)
+      bundler (>= 1.0.0)
+      guard (>= 0.2.2)
+    guard-rspec (0.5.2)
+      guard (>= 0.8.4)
     hike (1.2.1)
     i18n (0.6.0)
     json (1.6.1)
@@ -83,6 +93,11 @@ GEM
       rdoc (~> 3.4)
       thor (~> 0.14.6)
     rake (0.9.2.2)
+    rb-fchange (0.0.5)
+      ffi
+    rb-fsevent (0.4.3.1)
+    rb-inotify (0.8.8)
+      ffi (>= 0.5.0)
     rdoc (3.11)
       json (~> 1.4)
     rspec (2.6.0)
@@ -112,6 +127,9 @@ GEM
       hike (~> 1.2)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
+    sqlite3 (1.3.4)
+    sqlite3-ruby (1.3.3)
+      sqlite3 (>= 1.3.3)
     thor (0.14.6)
     tilt (1.3.3)
     treetop (1.4.10)
@@ -123,8 +141,16 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  artifice
   generator_spec
+  guard
+  guard-bundler
+  guard-rspec
   janrain-rails!
+  rb-fchange
+  rb-fsevent
+  rb-inotify
   rspec (= 2.6.0)
   rspec-rails (= 2.6.0)
   ruby-debug19
+  sqlite3-ruby

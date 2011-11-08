@@ -99,11 +99,8 @@ Simple configuration (config/janrain.yml):
 ## Possible Module Organization
 
 Janrain::Capture::User
-
 Janrain::Session
-
 Janrain::UrlHelpers
-
 Janrain::Configuration
 
 # TODO: 
