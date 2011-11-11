@@ -1,13 +1,11 @@
-require 'rails'
-require 'action_view'
-require 'action_controller'
-require 'active_model'
-require 'active_record'
-
-
 module Janrain
-  module Capture; end
+  module Capture
+    module Client; end
+  end
 end
 
+require 'janrain/config.rb'
 require 'janrain/capture/user.rb'
+require 'janrain/capture/client/oauth.rb'
+require 'janrain/capture/client/entity.rb'
 

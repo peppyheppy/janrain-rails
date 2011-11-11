@@ -98,6 +98,8 @@ Simple configuration (config/janrain.yml):
 
 ## Possible Module Organization
 
+Janrain::Capture::Client::OAuth
+Janrain::Capture::Client::Entity
 Janrain::Capture::User
 Janrain::Session
 Janrain::UrlHelpers
@@ -107,11 +109,9 @@ Janrain::Configuration
 
 Outside in/ front to back
 
-  * setup artiface, rails app
-  * create user from oauth request
-  * login user from oauth request
-  * update user from oauth request
-  * create the authenticated!
+  * controller: login user from oauth request
+  * controller: update user from oauth request
+  * controller: create the authenticated!
     ** setup the authenticated case
     ** setup not authenticated case
   * create the require_admin
@@ -120,6 +120,8 @@ Outside in/ front to back
   * create configuration for capture
   * create url helpers
   * create create the sign out case
+  * create the generator for User migration, and basic configuration
+    yaml
 
 # Janrain Documentation
 

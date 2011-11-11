@@ -1,3 +1,5 @@
-tmp/myapp.sqlite3
+spec/log/*
+spec/tmp/myapp.sqlite3
 *.sw[^f]
 log/*
+
