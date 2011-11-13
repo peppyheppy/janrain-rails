@@ -36,12 +36,12 @@ Local User model properties:
 # Controllers
 
 We will need to implement the authentication on controllers so we can ensure that
-users are logged in and have permission. 
+users are logged in and have permission.
 
 Simple controller integration:
 
     class ApplicationController < ActionController::Base
-      include Janrain::Auth
+      include Janrain::Authentication
     end
 
 Familiar authentication API's:
@@ -66,15 +66,16 @@ Admin permission enforcement:
 
 Url helpers (used for fancybox/iframed, etc):
 
-    janrain_login_url
-    janrain_register_url
+    janrain_signin_url
+    janrain_signout_url
+    janrain_signup_url
     janrain_edit_profile_url(current_user)
 
 # Session mangement
 
     class AuthController < ApplicationController
       def new
-        # goes to a page that opens up the sign in/sign up modal
+        # show a page that has buttons to signup or sign in, etc
       end
 
       def create
@@ -101,27 +102,20 @@ Simple configuration (config/janrain.yml):
 Janrain::Capture::Client::OAuth
 Janrain::Capture::Client::Entity
 Janrain::Capture::User
-Janrain::Session
-Janrain::UrlHelpers
-Janrain::Configuration
+Janrain::Capture::UrlHelpers
+Janrain::Config
+Janrain::Authentication
 
 # TODO: 
 
-Outside in/ front to back
-
-  * controller: login user from oauth request
-  * controller: update user from oauth request
-  * controller: create the authenticated!
-    ** setup the authenticated case
-    ** setup not authenticated case
+  * create url helpers
+  * add routes to generator
+  * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
+  * add the template/controller.rb to the generator
+  * add the cross site scripting static file to the generator
   * create the require_admin
     ** setup the authenticated case
     ** setup the not authenticated case
-  * create configuration for capture
-  * create url helpers
-  * create create the sign out case
-  * create the generator for User migration, and basic configuration
-    yaml
 
 # Janrain Documentation
 

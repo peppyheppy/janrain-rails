@@ -1,20 +1,16 @@
 require 'spec_helper'
 
-class User < ActiveRecord::Base
-  include Janrain::Capture::User
-end
-
-describe User do
+describe TestUser do
   it { should respond_to :entity= }
   it { should respond_to :oauth= }
 
   describe "authenticate" do
     it "should authenticate with a valid code" do
-      User.authenticate('a_valid_code').should be_a User
+      TestUser.authenticate('a_valid_code').should be_a TestUser
     end
 
     it "should not authenticate with an invalid code" do
-      User.authenticate('an_invalid_code').should be_false
+      TestUser.authenticate('an_invalid_code').should be_false
     end
   end
 
@@ -28,7 +24,7 @@ describe User do
 
       @time = Time.now
       Time.stub(:now).and_return(@time) # ouch
-      @user = User.new(
+      @user = TestUser.new(
         oauth: @oauth_params
       )
     end
@@ -62,7 +58,7 @@ describe User do
           'lastUpdated' => '2011-11-05 19:00:08.339082 +0000',
         }
       }
-      @user = User.new(entity: @entity_params)
+      @user = TestUser.new(entity: @entity_params)
       @entity_result = @entity_params['result']
     end
 

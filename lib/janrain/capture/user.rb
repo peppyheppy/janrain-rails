@@ -12,8 +12,9 @@ module Janrain::Capture::User
       if oauth['stat'] == 'ok'
         entity = Client::Entity.by_token(oauth['access_token'])
         user = self.find_or_initialize_by_capture_id(entity['id'])
-        user.update_attributes(entity: entity, oauth: oauth)
-        return user
+        if user.update_attributes(entity: entity, oauth: oauth)
+          return user
+        end
       end
       false
     end

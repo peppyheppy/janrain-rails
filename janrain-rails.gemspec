@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "ruby-debug19"
   s.add_development_dependency "rspec", "2.6.0"
   s.add_development_dependency "rspec-rails", "2.6.0"
-  s.add_development_dependency "generator_spec"
+  s.add_development_dependency "generator_spec", "0.8.3"
   s.add_development_dependency 'guard'
   s.add_development_dependency 'guard-bundler'
   s.add_development_dependency 'guard-rspec'
@@ -23,6 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rb-fchange'
   s.add_development_dependency 'artifice'
   s.add_development_dependency 'sqlite3-ruby'
-  s.add_development_dependency 'factory_girl_rails', '1.3.0'
 end
 

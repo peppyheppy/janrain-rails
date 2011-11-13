@@ -9,12 +9,17 @@ Application.initialize!
 # connect to sqlite db
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => "tmp/myapp.sqlite3")
 
+# create test user
+class TestUser < ActiveRecord::Base
+end
+
 # migrate if needed
-class User < ActiveRecord::Base; end
 class CreateTestUserModel < ActiveRecord::Migration
   def self.up
-    create_table :users do |t|
+    create_table :test_users do |t|
       t.integer  :capture_id
+      t.integer  :preferences, default: 0
+      t.integer  :permissions, default: 0
       # entity fields on convention
       t.string   :email
       t.string   :display_name
@@ -32,21 +37,10 @@ class CreateTestUserModel < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :users
+    drop_table :test_users
   end
 end
-CreateTestUserModel.down if User.table_exists?
+CreateTestUserModel.down if TestUser.table_exists?
 CreateTestUserModel.up
 
-# bogus controller for testing only
-class FoobarController < ::ActionController::Base
-  def test
-    render :text => 'success'
-  end
-end
-
-Rails.application.routes.draw do
-  get '/test' => 'foobar#test', :as => :test
-  root :to => "foobar#test"
-end
 
