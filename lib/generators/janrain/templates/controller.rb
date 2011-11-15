@@ -5,8 +5,8 @@ class <%= controller_name.camelize %>Controller < ApplicationController
   def create
     # XXX: features to add:
     # 1) code auth with render close fancybox
-    if @<%= name %> = <%= class_name %>.authenticate(params[:code])
-      sign_in @<%= name %>
+    if @<%= singular_name %> = <%= class_name %>.authenticate(params[:code])
+      sign_in @<%= singular_name %>
       flash[:notice] = 'You are now signed in'
     else
       flash[:error] = 'Unable to sign you in, try again'

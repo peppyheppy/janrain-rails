@@ -19,6 +19,7 @@ end
 controller_name = 'Session'
 name = 'test_user'
 class_name = name.camelize
+singular_name = name
 
 # load the controller template
 template = ERB.new(open('lib/generators/janrain/templates/controller.rb').read)

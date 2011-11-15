@@ -16,6 +16,15 @@ class JanrainGenerator < Rails::Generators::NamedBase
     template "xdcomm.html", "public/xdcomm.html"
   end
 
+  def add_model_migration
+    # if the model already exists, then render the
+    if (behavior == :invoke && model_exists?) || (behavior == :revoke && migration_exists?(table_name))
+      migration_template "migration_existing.rb", "db/migrate/add_janrain_to_#{table_name}"
+    else
+      migration_template "migration.rb", "db/migrate/janrain_create_#{table_name}"
+    end
+  end
+
   def generate_model
     invoke "active_record:model", [name], :migration => false unless model_exists? && behavior == :invoke
   end
@@ -27,15 +36,6 @@ class JanrainGenerator < Rails::Generators::NamedBase
     CONTENT
   end
 
-  def add_model_migration
-    # if the model already exists, then render the
-    if (behavior == :invoke && model_exists?) || (behavior == :revoke && migration_exists?(table_name))
-      migration_template "migration_existing.rb", "db/migrate/add_janrain_to_#{table_name}"
-    else
-      migration_template "migration.rb", "db/migrate/janrain_create_#{table_name}"
-    end
-  end
-
   def add_controllers
     template "controller.rb", "app/controllers/#{controller_name}_controller.rb"
 
@@ -45,15 +45,10 @@ class JanrainGenerator < Rails::Generators::NamedBase
   end
 
   def add_routes_for_controller
-    route(<<-ROUTES)
-  get '/#{controller_name}/signup' => '#{controller_name}#new', :as => :new_janrain_#{controller_name}
-  get '/#{controller_name}/signin' => '#{controller_name}#create'
-  get '/#{controller_name}/signout' => '#{controller_name}#destroy', :as => :janrain_signout
-    ROUTES
+    route("get '/#{controller_name}/signup'  => '#{controller_name}#new', :as => :new_janrain_#{controller_name}")
+    route("get '/#{controller_name}/signin'  => '#{controller_name}#create'")
+    route("get '/#{controller_name}/signout' => '#{controller_name}#destroy', :as => :janrain_signout")
   end
-
-  hook_for :test_framework
-  hook_for :orm
 
   def self.next_migration_number(dirname)
     ActiveRecord::Generators::Base.next_migration_number(dirname)

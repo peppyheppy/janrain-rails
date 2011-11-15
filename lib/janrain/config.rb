@@ -4,6 +4,7 @@ class Janrain::Config
   cattr_accessor :root
 
   def self.configuration
+    return  {} unless defined?(Rails) and Rails.root.present?
     @@config ||= begin
       config = YAML::load_file(File.join(Rails.root, 'config', 'janrain.yml'))
       config[Rails.env] || raise(RuntimeError, "config/janrain.yml is missing or invalid.")
