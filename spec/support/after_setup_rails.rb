@@ -9,8 +9,10 @@ end
 # defined within a rails application
 class ApplicationController < ActionController::Base
   prepend_view_path File.join(File.dirname(__FILE__), '..', 'fixtures', 'views')
-  include Janrain::Capture::UrlHelper
   include Janrain::Authentication
+  def index
+    render :text => 'hello'
+  end
 end
 
 # locals that would be set by the generator
@@ -24,12 +26,13 @@ eval(template.result(binding))
 
 # XXX: it would be great to use the same routes that we are creating for the resource
 Rails.application.routes.draw do
+  get '/urls' => 'application#index'
   get '/foobars/new' => 'foobars#new'
   get '/foobars/edit' => 'foobars#edit'
   resources :admin
   get '/session/signup' => 'session#new', :as => :new_janrain_session
-  get '/session/signin' => 'session#create', :as => :create_janrain_session
-  get '/session/signout' => 'session#destroy', :as => :signout_janrain_session
+  get '/session/signin' => 'session#create'
+  get '/session/signout' => 'session#destroy', :as => :janrain_signout
   root :to => "session#create"
 end
 

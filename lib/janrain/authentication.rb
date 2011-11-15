@@ -22,14 +22,15 @@ module Janrain::Authentication
 
   def current_user
     # XXX: resource_name
-    @current_user ||= TestUser.find_by_id(session[:session_user]) if session[:session_user]
+    @current_user ||= Janrain::Config.model.find_by_id(session[:session_user]) if session[:session_user]
   end
 
   protected
 
   def authenticate_user!
     unless user_signed_in?
-      redirect_to new_janrain_session_url, flash: { error: 'The page you requested requires you to be signed in' }
+      # XXX: resource_name
+      redirect_to send("new_janrain_#{Janrain::Config.controller.to_s.downcase}_url"), flash: { error: 'The page you requested requires you to be signed in' }
     end
   end
 

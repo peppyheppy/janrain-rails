@@ -13,4 +13,12 @@ class Janrain::Config
   def self.capture
     OpenStruct.new(configuration['capture']) || raise(RuntimeError, "config/janrain.yml does not appear to have capture settings.")
   end
+
+  def self.model
+    self.capture.model.constantize
+  end
+
+  def self.controller
+    self.capture.controller
+  end
 end

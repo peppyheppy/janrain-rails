@@ -12,6 +12,10 @@ class JanrainGenerator < Rails::Generators::NamedBase
     template "janrain.yml.erb", "config/janrain.yml"
   end
 
+  def copy_janrain_cross_scripting_file
+    template "xdcomm.html", "public/xdcomm.html"
+  end
+
   def generate_model
     invoke "active_record:model", [name], :migration => false unless model_exists? && behavior == :invoke
   end
@@ -33,20 +37,20 @@ class JanrainGenerator < Rails::Generators::NamedBase
   end
 
   def add_controllers
-    # add a controller named after the argument controller_name
-    # someting like this, but make sure we add:
-    # include Janrain::Capture::Controller
-    # then we should make sure we append:
-    # include Janrain::Capture::Authentication
-    # invoke "active_record:model", [name], :migration => false unless model_exists? && behavior == :invoke
+    template "controller.rb", "app/controllers/#{controller_name}_controller.rb"
+
+    inject_into_class("app/controllers/application_controller.rb", 'ApplicationController', <<-CONTENT)
+  include Janrain::Authentication
+    CONTENT
   end
 
   def add_routes_for_controller
-    # for the controller_name we need to add routes for:
-    # resource :session, only: [:new, :create, :destroy] # signin, signout
+    route(<<-ROUTES)
+  get '/#{controller_name}/signup' => '#{controller_name}#new', :as => :new_janrain_#{controller_name}
+  get '/#{controller_name}/signin' => '#{controller_name}#create'
+  get '/#{controller_name}/signout' => '#{controller_name}#destroy', :as => :janrain_signout
+    ROUTES
   end
-
-  # XXX: add generator for user model, controller, and helper
 
   hook_for :test_framework
   hook_for :orm

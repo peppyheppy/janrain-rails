@@ -108,11 +108,12 @@ Janrain::Authentication
 
 # TODO: 
 
-  * create url helpers
-  * add routes to generator
+  * save the janrain entity attributes in model as cache @user.some_field
+  * refresh login on model
+  * capture status for model (contains time left, etc)
+  * make sure the authentication stuff finds its way into the views
   * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
-  * add the template/controller.rb to the generator
-  * add the cross site scripting static file to the generator
+  * add return to parameter to urls for the redirects after signin/signup/signout/etc
   * create the require_admin
     ** setup the authenticated case
     ** setup the not authenticated case

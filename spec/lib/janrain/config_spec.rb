@@ -8,6 +8,14 @@ describe Janrain::Config do
       Config.capture.should be_a OpenStruct
     end
 
+    it "should have model as class" do
+      Config.model.should == TestUser
+    end
+
+    it "should have controller as string" do
+      Config.controller.should == 'session'
+    end
+
     it "should have domain" do
       Config.capture.domain.should_not be_nil
     end

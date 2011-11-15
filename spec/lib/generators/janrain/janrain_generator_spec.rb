@@ -1,6 +1,19 @@
 require 'spec_helper'
 require "generator_spec/test_case"
 require 'generators/janrain/janrain_generator'
+require 'fileutils'
+
+def setup_route_and_controller_fixtures(destination_root)
+  # routes setup
+  config = ::File.join(destination_root, 'config')
+  ::Dir.mkdir(config)
+  ::FileUtils.cp(::File.join('spec', 'fixtures','routes.rb'), ::File.join(config, 'routes.rb'))
+
+  # application controller setup
+  config = ::File.join(destination_root, 'app', 'controllers')
+  ::FileUtils.mkdir_p(config)
+  ::FileUtils.cp(::File.join('spec', 'fixtures','application_controller.rb'), ::File.join(config, 'application_controller.rb'))
+end
 
 describe JanrainGenerator do
   include GeneratorSpec::TestCase
@@ -10,6 +23,7 @@ describe JanrainGenerator do
 
   before do
     prepare_destination
+    setup_route_and_controller_fixtures(destination_root)
     run_generator
   end
 
@@ -44,10 +58,39 @@ describe JanrainGenerator do
     }
   end
 
+  it "should add routes" do
+    destination_root.should have_structure { # note { not 'do' needs to be used or fail
+      directory "config" do
+        file "routes.rb" do
+          contains "get '/session/signup'"
+          contains "new_janrain_session"
+          contains "janrain_signout"
+        end
+      end
+    }
+  end
+
+  it "should add controller" do
+    destination_root.should have_structure { # note { not 'do' needs to be used or fail
+      directory "app" do
+        directory "controllers" do
+          file "session_controller.rb" do
+            contains "SessionController"
+            contains "@user = User"
+            contains "def new"
+            contains "def create"
+            contains "def destroy"
+          end
+        end
+      end
+    }
+  end
+
   describe "existing model" do
     before do
       JanrainGenerator.stub(:next_migration_number).and_return('20111113050103')
       prepare_destination
+      setup_route_and_controller_fixtures(destination_root)
       run_generator
     end
 
@@ -72,6 +115,7 @@ describe JanrainGenerator do
       JanrainGenerator.any_instance.stub(:model_exists?).and_return(false)
       JanrainGenerator.stub(:next_migration_number).and_return('20111113050103')
       prepare_destination
+      setup_route_and_controller_fixtures(destination_root)
       run_generator
     end
 
