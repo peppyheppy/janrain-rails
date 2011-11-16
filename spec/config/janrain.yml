@@ -1,9 +1,4 @@
 test:
-  fake_capture:
-    client_id: '64vvs4zb589aybtcs2rnpvf6uguec49r'
-    client_secret: '5qux2fu27wzk4v2zz5h5e8q6qfv8p7fm'
-    domain: 'https://roadrunnerrecords.dev.janraincapture.com'
-    redirect_url: 'www.roadrunnerrecords.dev'
   capture:
     model: 'TestUser'
     controller: 'session'
