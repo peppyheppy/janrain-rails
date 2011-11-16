@@ -91,6 +91,9 @@ describe JanrainGenerator do
       JanrainGenerator.stub(:next_migration_number).and_return('20111113050103')
       prepare_destination
       setup_route_and_controller_fixtures(destination_root)
+      # a bit of hackery to get th code to run in real life the way it should.
+      FileUtils.mkdir_p(::File.join(destination_root, 'app', 'models'))
+      ::File.open(::File.join(destination_root, 'app', 'models', 'user.rb'), 'w') {|f| f.write("class User; end") }
       run_generator
     end
 
@@ -112,7 +115,6 @@ describe JanrainGenerator do
 
   describe "non-existing model" do
     before do
-      JanrainGenerator.any_instance.stub(:model_exists?).and_return(false)
       JanrainGenerator.stub(:next_migration_number).and_return('20111113050103')
       prepare_destination
       setup_route_and_controller_fixtures(destination_root)
