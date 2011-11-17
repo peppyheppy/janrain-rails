@@ -22,7 +22,12 @@ module Janrain::Authentication
 
   def current_user
     # XXX: resource_name
-    @current_user ||= Janrain::Config.model.find_by_id(session[:session_user]) if session[:session_user]
+    $stdout.puts "$" * 50
+    $stdout.puts "session: #{session.inspect}"
+    $stdout.puts "session: #{request.session.inspect}"
+    $stdout.puts Janrain::Config.model.find_by_id(request.session[:session_user])
+    $stdout.puts "$" * 50
+    @current_user ||= Janrain::Config.model.find_by_id(request.session[:session_user]) if request.session[:session_user]
   end
 
   protected
