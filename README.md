@@ -117,8 +117,8 @@ Janrain::Authentication
   * refresh login on model (add support for fancybox iframe stuff???)
   * capture status for model (contains time left, etc)
   * create the require_admin
-  ** setup the authenticated case
-  ** setup the not authenticated case
+    * setup the authenticated case
+    * setup the not authenticated case
 
 # Janrain Documentation
 
