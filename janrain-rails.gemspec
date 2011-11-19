@@ -23,5 +23,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rb-fchange'
   s.add_development_dependency 'artifice'
   s.add_development_dependency 'sqlite3-ruby'
+  s.add_development_dependency 'database_cleaner'
 end
 

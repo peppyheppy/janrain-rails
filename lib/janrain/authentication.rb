@@ -5,6 +5,10 @@ module Janrain::Authentication
     helper_method :current_user, :signed_in?, :sign_in, :sign_out!
   end
 
+  def current_user
+    @current_user ||= Janrain::Config.model.find_by_id(session[:session_user]) if session[:session_user]
+  end
+
   def user_signed_in?
     !!current_user
   end
@@ -20,21 +24,17 @@ module Janrain::Authentication
     @current_user = nil
   end
 
-  def current_user
-    # XXX: resource_name
-    $stdout.puts "$" * 50
-    $stdout.puts "session: #{session.inspect}"
-    $stdout.puts "session: #{request.session.inspect}"
-    $stdout.puts Janrain::Config.model.find_by_id(request.session[:session_user])
-    $stdout.puts "$" * 50
-    @current_user ||= Janrain::Config.model.find_by_id(request.session[:session_user]) if request.session[:session_user]
-  end
-
   protected
+
+  def original_or_default_url(default)
+    url = (session[:return_to] || params[:return_to] || default)
+    session[:return_to] = nil
+    url
+  end
 
   def authenticate_user!
     unless user_signed_in?
-      # XXX: resource_name
+      session[:return_to] = request.url
       redirect_to send("new_janrain_#{Janrain::Config.controller.to_s.downcase}_url"), flash: { error: 'The page you requested requires you to be signed in' }
     end
   end

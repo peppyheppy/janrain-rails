@@ -18,6 +18,7 @@ describe FoobarsController, type: :controller do
     it "should require signed in user for edt" do
       get :edit
       flash[:error].should_not be_blank
+      controller.session[:return_to].should == 'http://test.host/foobars/edit'
       response.should be_redirect
     end
 

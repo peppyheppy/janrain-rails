@@ -44,6 +44,7 @@ GEM
     bitfields (0.4.0)
     builder (3.0.0)
     columnize (0.3.4)
+    database_cleaner (0.7.0)
     diff-lcs (1.1.3)
     erubis (2.7.0)
     ffi (1.0.10)
@@ -147,6 +148,7 @@ PLATFORMS
 
 DEPENDENCIES
   artifice
+  database_cleaner
   generator_spec (= 0.8.3)
   guard
   guard-bundler

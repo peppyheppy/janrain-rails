@@ -11,7 +11,7 @@ module Janrain::Capture::User
       oauth = Client::Oauth.token(code)
       if oauth['stat'] == 'ok'
         entity = Client::Entity.by_token(oauth['access_token'])
-        user = self.find_or_initialize_by_capture_id(entity['result']['id'])
+        user = find_or_initialize_by_capture_id(entity['result']['id'])
         if user.update_attributes(entity: entity, oauth: oauth)
           return user
         end
@@ -25,6 +25,9 @@ module Janrain::Capture::User
     # TODO: update existing cache fields
     # 4) if the column exists in mappings then update
     result.each do |original_column, value|
+      # map the capture id
+      original_column = 'capture_id' if original_column == 'id'
+
       new_column_name = original_column.underscore
 
       # handle the mapped columns

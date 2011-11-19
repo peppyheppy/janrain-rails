@@ -11,13 +11,12 @@ class <%= controller_name.camelize %>Controller < ApplicationController
     else
       flash[:error] = 'Unable to sign you in, try again'
     end
-    redirect_to params[:return_to] || root_url
+    redirect_to original_or_default_url(root_url)
   end
 
   def destroy
-    # XXX: sign the user out
     sign_out!
     flash[:notice] = 'You are now signed out'
-    redirect_to params[:return_to] || root_url
+    redirect_to original_or_default_url(root_url)
   end
 end

@@ -4,6 +4,14 @@ describe TestUser do
   it { should respond_to :entity= }
   it { should respond_to :oauth= }
 
+  before :each do
+    @oauth_params = {
+      'access_token' => 'yoyoyo',
+      'refresh_token' => 'yayaya',
+      'expires_in' => 3600,
+    }
+  end
+
   describe "authenticate" do
     it "should authenticate with a valid code" do
       TestUser.authenticate('a_valid_code').should be_a TestUser
@@ -16,12 +24,6 @@ describe TestUser do
 
   describe "user session (oauth)" do
     before :each do
-      @oauth_params = {
-        'access_token' => 'yoyoyo',
-        'refresh_token' => 'yayaya',
-        'expires_in' => 3600,
-      }
-
       @time = Time.now
       Time.stub(:now).and_return(@time) # ouch
       @user = TestUser.new(
@@ -48,6 +50,7 @@ describe TestUser do
       @time = Time.parse('2011-11-05 19:00:08.339082 +0000')
       @entity_params = {
         'result' => {
+          'id' => 7,
           'aboutMe' => 'hello',
           'birthday'=> '7/20/78',
           'created' => '2011-11-05 19:00:08.339082 +0000',
@@ -58,8 +61,13 @@ describe TestUser do
           'lastUpdated' => '2011-11-05 19:00:08.339082 +0000',
         }
       }
-      @user = TestUser.new(entity: @entity_params)
       @entity_result = @entity_params['result']
+      @user = TestUser.find_or_initialize_by_capture_id(@entity_result['id'])
+      @user.update_attributes(entity: @entity_params, oauth: @oauth_params)
+    end
+
+    it "should create or update user but the capture id should not override id" do
+      @user.id.should_not == 7
     end
 
     it "should import fields that map directly (simple case)" do
