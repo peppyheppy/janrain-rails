@@ -3,25 +3,37 @@ require 'spec_helper'
 describe SessionController, type: :controller do
 
   context "signin / create" do
-    it "should create a new local user from a newly captured user" do
-      get :create, code: 'a_valid_code'
-      assigns(:test_user).should_not be_new_record
-      flash[:notice].should_not be_blank
-      controller.should be_user_signed_in
-      response.should redirect_to root_url
+    context "without iframe" do
+
+      before :each do
+        Janrain::Config.stub(:within_iframe?) { false }
+      end
+
+      it "should create a new local user from a newly captured user" do
+        get :create, code: 'a_valid_code'
+        assigns(:test_user).should_not be_new_record
+        flash[:notice].should_not be_blank
+        controller.should be_user_signed_in
+        response.should redirect_to root_url
+      end
+
+      it "should authenticate an existing user" do
+        get :create, code: 'an_invalid_code'
+        assigns(:test_user).should be_false
+        flash[:error].should_not be_blank
+        controller.should_not be_user_signed_in
+        response.should redirect_to root_url
+      end
+
+      it "should redirct to the return_to url passed in" do
+        get :create, code: 'a_valid_code', return_to: 'http://localhost/yoyo.htm'
+        response.should redirect_to 'http://localhost/yoyo.htm'
+      end
     end
 
-    it "should authenticate an existing user" do
-      get :create, code: 'an_invalid_code'
-      assigns(:test_user).should be_false
-      flash[:error].should_not be_blank
-      controller.should_not be_user_signed_in
-      response.should redirect_to root_url
-    end
-
-    it "should redirct to the return_to url passed in" do
+    it "should render javascript redirect if configured in modal" do
       get :create, code: 'a_valid_code', return_to: 'http://localhost/yoyo.htm'
-      response.should redirect_to 'http://localhost/yoyo.htm'
+      response.body.should include("parent.location = 'http://localhost/yoyo.htm'")
     end
   end
 

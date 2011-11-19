@@ -16,6 +16,10 @@ describe Janrain::Config do
       Config.controller.should == 'session'
     end
 
+    it "should have a within iframe flag" do
+      Config.should be_within_iframe
+    end
+
     it "should have domain" do
       Config.capture.domain.should_not be_nil
     end

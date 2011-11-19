@@ -26,10 +26,24 @@ module Janrain::Authentication
 
   protected
 
+  # Override this method in controller for custom javascript stuff
+  def render_js_redirect(url)
+    render text: "<script>parent.location = '#{url}';</script>"
+  end
+
   def original_or_default_url(default)
     url = (session[:return_to] || params[:return_to] || default)
     session[:return_to] = nil
     url
+  end
+
+  def render_or_redirect(default)
+    url = original_or_default_url(default)
+    if Janrain::Config.within_iframe?
+      render_js_redirect(url)
+    else
+      redirect_to url
+    end
   end
 
   def authenticate_user!

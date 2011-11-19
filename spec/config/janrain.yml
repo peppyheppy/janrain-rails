@@ -6,6 +6,7 @@ test:
     client_secret: 'sssshh-dont-tell-anyone'
     domain: 'https://asite.dev.janraincapture.com'
     redirect_url: 'http://mysite.com/auth'
+    within_iframe: true
     entity:
       # see the rails_setup migration for field information
       ignore_columns: [ 'aboutMe' ]

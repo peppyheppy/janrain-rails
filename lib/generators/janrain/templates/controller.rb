@@ -11,7 +11,7 @@ class <%= controller_name.camelize %>Controller < ApplicationController
     else
       flash[:error] = 'Unable to sign you in, try again'
     end
-    redirect_to original_or_default_url(root_url)
+    render_or_redirect(root_url)
   end
 
   def destroy

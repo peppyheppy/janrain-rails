@@ -112,9 +112,9 @@ Janrain::Authentication
 # TODO: 
 
   * add support for dynamic redirect_url for different subdomains, etc
+  * refresh login on model (add support for fancybox iframe stuff???)
   * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
   * save the janrain entity attributes in model as cache @user.some_field
-  * refresh login on model (add support for fancybox iframe stuff???)
   * capture status for model (contains time left, etc)
   * create the require_admin
     * setup the authenticated case

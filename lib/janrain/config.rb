@@ -19,4 +19,9 @@ class Janrain::Config
   def self.controller
     self.capture.controller
   end
+
+  def self.within_iframe?
+    !!self.capture.within_iframe
+  end
+
 end
