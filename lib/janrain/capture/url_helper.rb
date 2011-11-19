@@ -23,5 +23,12 @@ module Janrain::Capture::UrlHelper
     config = Janrain::Config.capture
     "#{config.domain}/oauth/profile?access_token=#{user.try(:access_token)}&callback=closeProfileEditor&xd_receiver=http%3A//#{request.host}/xdcomm.html"
   end
+
+  private
+
+  # def current_host
+  #  "http://#{request.host}#{config.redirect_url}"
+  # end
+
 end
 

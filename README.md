@@ -22,9 +22,9 @@ User capture methods:
 
     User#find_by_capture_id(7) # => 
     User#find(3) # => internal id that is used for local database
-    User#capture_status
-    User#logged_in?
-    User#refresh_login!
+    User#signed_in? # => TODO
+    User#capture_status # => TODO
+    User#refresh_login! # => TODO
 
 Local User model properties:
 
@@ -51,7 +51,7 @@ Familiar authentication API's:
 
       def index
         # same methods and api as devise.
-        return if logged_in? and current_user.email
+        return if signed_in? and current_user.email
       end
     end
 
@@ -59,12 +59,12 @@ Admin permission enforcement:
 
     class Roadie::MusicController < ApplicationController
       before_filter :authenticate_user! # just like devise
-      before_filter :require_admin! # enforce admin permissions
+      before_filter :require_admin! # enforce admin permissions # => TODO
     end
 
 # Url Helpers
 
-Url helpers (used for fancybox/iframed, etc):
+Url helpers (used for fancybox/iframes, etc):
 
     janrain_signin_url
     janrain_signout_url
@@ -80,10 +80,13 @@ Url helpers (used for fancybox/iframed, etc):
 
       def create
         # processes new and existing users and signs them in
+        ...
+        sign_in user
       end
 
       def destroy
         # signs a user out
+        sign_out!
       end
     end
 
@@ -95,7 +98,7 @@ Simple configuration (config/janrain.yml):
       capture:
         client_id: 'kjhgkjhgdw7qd8qw873yrgukegw'
         secret: 'sssshh-dont-tell-anyone'
-        endpoint: 'https://asite.dev.janraincapture.com'
+        domain: 'https://asite.dev.janraincapture.com'
 
 ## Possible Module Organization
 
@@ -108,12 +111,11 @@ Janrain::Authentication
 
 # TODO: 
 
-  * save the janrain entity attributes in model as cache @user.some_field
-  * refresh login on model
-  * capture status for model (contains time left, etc)
-  * make sure the authentication stuff finds its way into the views
+  * add support for dynamic redirect_url for different subdomains, etc
   * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
-  * add return to parameter to urls for the redirects after signin/signup/signout/etc
+  * save the janrain entity attributes in model as cache @user.some_field
+  * refresh login on model (add support for fancybox iframe stuff???)
+  * capture status for model (contains time left, etc)
   * create the require_admin
     ** setup the authenticated case
     ** setup the not authenticated case
