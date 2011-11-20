@@ -32,8 +32,19 @@ describe Janrain::Config do
       Config.capture.client_id.should_not be_nil
     end
 
-    it "should have redirect url" do
-      Config.capture.redirect_url.should_not be_nil
+    context "redirect_url" do
+
+      it "should have redirect url" do
+        Config.capture.redirect_url.should_not be_nil
+      end
+
+      it "should have redirect url that takes a hostname as an optional override" do
+        Config.redirect_url(host:'www.other.host.com').should include '://www.other.host.com'
+      end
+
+      it "should have redirect url that takes a return_to parameter as an option" do
+        Config.redirect_url(return_to:'http://www.other.host.com/?a=1#b=2').should include 'http://mysite.com/auth?return_to=http%3A%2F%2Fwww.other.host.com%2F%3Fa%3D1%23b%3D2'
+      end
     end
 
     context "entity" do

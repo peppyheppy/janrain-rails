@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'uri'
 class Janrain::Config
 
   def self.configuration
@@ -18,6 +19,19 @@ class Janrain::Config
 
   def self.controller
     self.capture.controller
+  end
+
+  def self.redirect_url(options={})
+    options.symbolize_keys!
+    uri = URI.parse(options.delete(:url) || capture.redirect_url)
+    if host = options.delete(:host)
+      uri.host = host
+    end
+    if return_to = options.delete(:return_to)
+      delim = uri.query.blank? ? '' : '&'
+      uri.query = "#{uri.query}#{delim}return_to=#{CGI.escape(return_to)}"
+    end
+    uri.to_s
   end
 
   def self.within_iframe?

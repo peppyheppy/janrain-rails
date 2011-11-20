@@ -111,7 +111,7 @@ Janrain::Authentication
 
 # TODO: 
 
-  * add support for dynamic redirect_url for different subdomains, etc
+  * BUG: √ add support for dynamic redirect_url for different subdomains, etc
   * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
   * save the janrain entity attributes in model as cache @user.some_field
   * create the require_admin
