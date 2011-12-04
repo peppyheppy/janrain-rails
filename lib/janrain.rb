@@ -4,6 +4,7 @@ module Janrain
   end
 end
 
+require 'bitfields'
 require 'janrain/config.rb'
 require 'janrain/authentication.rb'
 require 'janrain/capture/user.rb'

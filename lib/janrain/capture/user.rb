@@ -8,20 +8,14 @@ module Janrain::Capture::User
     include Janrain::Capture
     def authenticate(code)
       # XXX: lets support password auth at some point
-      $stdout.puts "*" * 20
       oauth = Client::Oauth.token(code)
-      $stdout.puts "oauth: #{oauth.inspect}"
       if oauth['stat'] == 'ok'
         entity = Client::Entity.by_token(oauth['access_token'])
-        $stdout.puts "entity: #{entity.inspect}"
         user = find_or_initialize_by_capture_id(entity['result']['id'])
-        $stdout.puts "user: #{user.inspect}"
         if user.update_attributes(entity: entity, oauth: oauth)
-          $stdout.puts "user update: #{user.inspect}"
           return user
         end
       end
-      $stdout.puts "*" * 20
       false
     end
   end

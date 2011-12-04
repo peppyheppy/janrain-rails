@@ -51,6 +51,11 @@ describe JanrainGenerator do
           file "user.rb" do
             contains "class User < ActiveRecord::Base"
             contains "include Janrain::Capture::User"
+            contains "include Bitfields"
+            contains "bitfield :permissions,"
+            contains "bitfield :permissions,"
+            contains ":admin"
+            contains ":superuser"
             contains "end"
           end
         end

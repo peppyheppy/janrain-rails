@@ -3,6 +3,12 @@
 # include janrain user concerns into test user
 class TestUser < ActiveRecord::Base
   include Janrain::Capture::User
+  include Bitfields
+  # NOTE: order should not change, if it does site data may become corrupt.
+  bitfield :permissions,
+    1 => :admin,
+    2 => :superuser
+  bitfield :preferences # add any local preferences here
 end
 
 # create the application controller that would otherwise be
@@ -28,8 +34,10 @@ eval(template.result(binding))
 # XXX: it would be great to use the same routes that we are creating for the resource
 Rails.application.routes.draw do
   get '/urls' => 'application#index'
-  get '/foobars/new' => 'foobars#new'
-  get '/foobars/edit' => 'foobars#edit'
+  get '/foobars/anonymous_allowed' => 'foobars#anonymous_allowed'
+  get '/foobars/reqular_login_required' => 'foobars#reqular_login_required'
+  get '/foobars/admin_login_required' => 'foobars#admin_login_required'
+  get '/foobars/super_login_required' => 'foobars#super_login_required'
   resources :admin
   get '/session/signup' => 'session#new', :as => :new_janrain_session
   get '/session/signin' => 'session#create'

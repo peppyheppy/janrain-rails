@@ -47,10 +47,20 @@ module Janrain::Authentication
   end
 
   def authenticate_user!
-    unless user_signed_in?
-      session[:return_to] = request.url
-      redirect_to send("new_janrain_#{Janrain::Config.controller.to_s.downcase}_url"), flash: { error: 'The page you requested requires you to be signed in' }
-    end
+    access_denied unless user_signed_in?
+  end
+
+  def authenticate_admin_user!
+    access_denied unless user_signed_in? and current_user.admin?
+  end
+
+  def authenticate_super_user!
+    access_denied unless user_signed_in? and current_user.admin? and current_user.superuser?
+  end
+
+  def access_denied
+    session[:return_to] = request.url
+    redirect_to send("new_janrain_#{Janrain::Config.controller.to_s.downcase}_url"), flash: { error: 'The page you requested requires you to be signed in' }
   end
 
 end

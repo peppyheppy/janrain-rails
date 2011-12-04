@@ -59,7 +59,8 @@ Admin permission enforcement:
 
     class Roadie::MusicController < ApplicationController
       before_filter :authenticate_user! # just like devise
-      before_filter :require_admin! # enforce admin permissions # => TODO
+      before_filter :authenticate_admin_user! # enforce admin permissions
+      before_filter :authenticate_super_user! # enforce super user permissions
     end
 
 # Url Helpers
@@ -70,6 +71,8 @@ Url helpers (used for fancybox/iframes, etc):
     janrain_signout_url
     janrain_signup_url
     janrain_edit_profile_url(current_user)
+
+Options: :url overrides the return_to url, :host  overrides the host
 
 # Session mangement
 
@@ -114,10 +117,8 @@ Janrain::Authentication
   * BUG: √ add support for dynamic redirect_url for different subdomains, etc
   * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
   * save the janrain entity attributes in model as cache @user.some_field
-  * create the require_admin
-    * setup the authenticated case
-    * setup the not authenticated case
   * capture status for model (contains time left, etc)
+  * update remote attributes on capture entity (permissions by comparing updated dates)
 
 # Janrain Documentation
 

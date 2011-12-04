@@ -33,7 +33,13 @@ class JanrainGenerator < Rails::Generators::NamedBase
     # add the janrain module/concerns to the model
     inject_into_class(model_path, class_name, <<-CONTENT) if model_exists?
   include Janrain::Capture::User
-    CONTENT
+  include Bitfields
+  # NOTE: order should not change, if it does site data may become corrupt.
+  bitfield :permissions,
+    1 => :admin,
+    2 => :superuser
+  bitfield :preferences # add any local preferences here
+   CONTENT
   end
 
   def add_controllers

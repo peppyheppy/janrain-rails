@@ -3,6 +3,8 @@ require 'spec_helper'
 describe TestUser do
   it { should respond_to :entity= }
   it { should respond_to :oauth= }
+  it { should respond_to :admin? }
+  it { should respond_to :superuser? }
 
   before :each do
     @oauth_params = {
@@ -83,6 +85,8 @@ describe TestUser do
     end
 
   end
+
+
 
 end
 
