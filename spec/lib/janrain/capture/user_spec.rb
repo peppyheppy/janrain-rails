@@ -15,6 +15,8 @@ describe TestUser do
   end
 
   describe "authenticate" do
+    it "should override the host name with an options to authenticate"
+
     it "should authenticate with a valid code" do
       TestUser.authenticate('a_valid_code').should be_a TestUser
     end

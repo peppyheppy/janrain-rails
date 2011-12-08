@@ -6,9 +6,9 @@ module Janrain::Capture::User
 
   module ClassMethods
     include Janrain::Capture
-    def authenticate(code)
+    def authenticate(code, options={})
       # XXX: lets support password auth at some point
-      oauth = Client::Oauth.token(code)
+      oauth = Client::Oauth.token(code, options)
       if oauth['stat'] == 'ok'
         entity = Client::Entity.by_token(oauth['access_token'])
         user = find_or_initialize_by_capture_id(entity['result']['id'])

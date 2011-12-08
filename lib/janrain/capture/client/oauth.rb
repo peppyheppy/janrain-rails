@@ -12,7 +12,7 @@ module Janrain::Capture::Client
       # XXX: support multiple grant types
       query = {
         code: code,
-        redirect_uri: Config.capture.redirect_url,
+        redirect_uri: Config.redirect_url(options),
         grant_type: 'authorization_code',
         client_id: Config.capture.client_id,
         client_secret: Config.capture.client_secret,
