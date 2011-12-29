@@ -114,6 +114,7 @@ Janrain::Authentication
 
 # TODO: 
 
+  * add flag for capture update failures, etc
   * save the janrain entity attributes in model as cache @user.some_field
   * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
   * capture status for model (contains time left, etc)
