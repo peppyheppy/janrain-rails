@@ -20,6 +20,59 @@ module Janrain::Capture::User
     end
   end
 
+  def to_capture(only_changes=false)
+    dup_attributes = if only_changes
+      self.attributes.dup.keep_if { |k,v| self.changes.key? k }
+    else
+      self.attributes.dup
+    end
+    attrs = dup_attributes.inject({}) do |all, (key, value)|
+      capture_key = (Janrain::Config.capture.entity['mappings'].key(key) || key).to_s
+      unless (Janrain::Config.capture.entity['ignore_columns'] || []).include?(capture_key)
+        all[capture_key] = value
+      end
+      all
+    end
+
+    if capture_id.blank?
+      attrs.delete_if { |a,v| a == 'id' || a == 'capture_id' }
+    end
+    attrs
+  end
+
+  def persist_to_capture(only_changes = false)
+    params = self.to_capture(only_changes)
+    if not params.blank?
+      response = {}
+      if capture_id.blank?
+        response = Janrain::Capture::Client::Entity.create(params) unless params.blank?
+      else
+        response = Janrain::Capture::Client::Entity.update(capture_id, params)
+      end
+      response['stat'] == 'ok'
+    else
+      true # nothing to update
+    end
+  end
+
+  def change_privileges(up_or_down)
+    up_or_down = up_or_down.to_s.try(:to_sym)
+
+    if up_or_down == :down
+      if self.superuser?
+        self.update_attribute(:superuser, false)
+      elsif self.admin?
+        self.update_attribute(:admin, false)
+      end
+    elsif up_or_down == :up
+      if not self.admin?
+        self.update_attribute(:admin, true)
+      elsif self.admin?
+        self.update_attribute(:superuser, true)
+      end
+    end
+  end
+
   def entity=(entity)
     result = entity['result']
     # TODO: update existing cache fields

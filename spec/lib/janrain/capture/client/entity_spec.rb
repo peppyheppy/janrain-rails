@@ -15,4 +15,10 @@ describe Janrain::Capture::Client::Entity do
     end
   end
 
+  it "should get an entity by capture id" #implemented
+  it "should get the entity count" #implemented
+  it "should create a new entity" #implemented
+  it "should create multiple entities using bulk create"
+  it "should remove/delete entity" #implemented
+  it "should find some entities" #implemented
 end

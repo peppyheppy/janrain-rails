@@ -5,6 +5,9 @@ describe TestUser do
   it { should respond_to :oauth= }
   it { should respond_to :admin? }
   it { should respond_to :superuser? }
+  it { should respond_to :change_privileges }
+  it { should respond_to :to_capture }
+  it { should respond_to :persist_to_capture }
 
   before :each do
     @oauth_params = {
@@ -12,6 +15,150 @@ describe TestUser do
       'refresh_token' => 'yayaya',
       'expires_in' => 3600,
     }
+    @user_params = {
+      capture_id: "1",
+      about_me: "hi there",
+      display_name: "my name",
+      email: "myname@myco.com",
+      last_login: Time.now,
+    }
+  end
+
+  context "capture persistence" do
+    context "new capture user" do
+
+      it "should send all new attributes to capture" do
+        user = TestUser.new(@user_params.merge(capture_id: nil, email: 'newuser@valid.com'))
+        user.persist_to_capture.should be_true
+      end
+
+      it "should send all new attributes to capture" do
+        user = TestUser.new(@user_params.merge(capture_id: nil, email: 'newuser@invalid.com'))
+        user.persist_to_capture.should be_false
+      end
+
+    end
+
+    context "update existing user" do
+
+      it "should send changed attributes to capture VALID" do
+        user = TestUser.create(@user_params)
+        user.email = 'existinguser@valid.com'
+        user.persist_to_capture(only_changes = true).should be_true
+      end
+
+      it "should send changed attributes to capture INVALID" do
+        user = TestUser.create(@user_params)
+        user.email = 'existinguser@invalid.com'
+        user.persist_to_capture(only_changes = true).should be_false
+      end
+
+    end
+  end
+
+  context "from active record cache to_capture key/value pairs" do
+
+    context "new capture user" do
+      it "should return key/value pairs for capture schema for new records" do
+        user = TestUser.new(@user_params.merge(capture_id: nil))
+        attrs = user.to_capture
+        attrs.should be_a Hash
+        attrs.should have_key 'email'
+        attrs['email'].should == @user_params[:email]
+        attrs.should_not have_key 'id'
+        attrs.should_not have_key 'capture_id'
+      end
+    end
+
+    context "existing capture user" do
+
+      before :each do
+        @user = TestUser.create(@user_params)
+        @attrs = @user.to_capture
+      end
+
+      it "should return key/value pairs for capture schema for existing records" do
+        @attrs.should be_a Hash
+        @attrs.should have_key 'email'
+        @attrs['email'].should == @user_params[:email]
+        @attrs.should have_key 'id'
+      end
+
+      it "should exclude locally cached values" do
+        @attrs.should_not have_key 'about_me'
+        @attrs.should_not have_key 'aboutMe'
+      end
+
+      it "should convert case as expected (WITHOUT mapping specified)" do
+        @attrs.should have_key 'last_login'
+        @attrs.should_not have_key 'lastLogin'
+      end
+
+      it "should convert case as expected (WITH mapping specified)" do
+        @attrs.should_not have_key 'display_name'
+        @attrs.should have_key 'displayName'
+      end
+
+      it "should include mapped fields that require name conversion" do
+        @attrs.should have_key 'birthday'
+      end
+
+      context "changes only" do
+
+        it "should only returned changed fields" do
+          @user.display_name = 'my newest name'
+          @attrs = @user.to_capture(changed_attributes_only = true)
+          @attrs.should have(1).items
+          @attrs.should have_key('displayName')
+        end
+
+      end
+    end
+  end
+
+  context "privelages/ permissions" do
+
+    before :each do
+      @user  = TestUser.create(@user_params)
+      @admin = TestUser.create(@user_params.merge(admin: true))
+      @super = TestUser.create(@user_params.merge(admin: true, superuser: true))
+    end
+
+    it "should ignore nil arguments" do
+      @user.should_not be_admin
+      @user.change_privileges(nil)
+      @user.should_not be_admin
+    end
+
+    context "increase/up" do
+      it "should make a user an admin" do
+        @user.should_not be_admin
+        @user.change_privileges(:up)
+        @user.should be_admin
+      end
+
+      it "should make an admin a super user" do
+        @admin.should be_admin
+        @admin.should_not be_superuser
+        @admin.change_privileges(:up)
+        @admin.should be_superuser
+      end
+    end
+    context "decrease/down" do
+      it "should make an admin a user" do
+        @admin.should be_admin
+        @admin.change_privileges(:down)
+        @admin.should_not be_admin
+      end
+
+      it "should make an super user an admin" do
+        @super.should be_admin
+        @super.should be_superuser
+        @super.change_privileges(:down)
+        @super.should be_admin
+        @super.should_not be_superuser
+      end
+    end
   end
 
   describe "authenticate" do

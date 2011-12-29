@@ -114,11 +114,17 @@ Janrain::Authentication
 
 # TODO: 
 
-  * BUG: √ add support for dynamic redirect_url for different subdomains, etc
-  * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
   * save the janrain entity attributes in model as cache @user.some_field
+  * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
   * capture status for model (contains time left, etc)
-  * update remote attributes on capture entity (permissions by comparing updated dates)
+  * [implement pending tests] create schema tools for adding and removing fields to schema (needs tests)
+    * get schema (needs test)
+    * create new entity type (user_3, etc)
+    * permissions for schema access (ignore for now)
+    * add constraints to schema (email, unique constraint)
+    * [remove attribute](https://janraincapture.com/docs/api_entityType.removeAttribute.html) (needs tests)
+  * add support for default entity types/names for user, etc
+
 
 # Janrain Documentation
 

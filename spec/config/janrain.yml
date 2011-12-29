@@ -9,7 +9,9 @@ test:
     within_iframe: true
     entity:
       # see the rails_setup migration for field information
-      ignore_columns: [ 'aboutMe' ]
-      mappings:
+      ignore_columns: [ 'aboutMe' ] # external names
+      mappings: # external: 'internal'
         birthday: 'birthdate'
+        aboutMe: 'about_me' # note: even though about me is ignored, it still needs to be mapped so conversion from active record to capture works
+        displayName: 'display_name'
 
