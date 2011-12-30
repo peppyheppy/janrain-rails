@@ -62,6 +62,10 @@ describe Janrain::Config do
         Config.capture.entity['mappings'].should be_a Hash
         Config.capture.entity['mappings']['birthday'].should == 'birthdate'
       end
+
+      it "should have entity schema type name" do
+        Config.capture.entity['schema_type_name'].should == 'user'
+      end
     end
   end
 

@@ -9,6 +9,7 @@ test:
     within_iframe: true
     entity:
       # see the rails_setup migration for field information
+      schema_type_name: 'user'
       ignore_columns: [ 'aboutMe' ] # external names
       mappings: # external: 'internal'
         birthday: 'birthdate'

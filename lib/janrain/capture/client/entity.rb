@@ -72,7 +72,7 @@ module Janrain::Capture::Client
 
     def self.defaults
       {
-        type_name: 'user', # XXX: get default entity from config.
+        type_name: Config.capture.entity['schema_type_name'],
         client_id: Config.capture.client_id,
         client_secret: Config.capture.client_secret,
       }
