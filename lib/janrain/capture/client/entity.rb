@@ -36,9 +36,9 @@ module Janrain::Capture::Client
     # https://janraincapture.com/docs/api_entity.bulkCreate.html
     # returns an array of ids and/or errors
     def self.bulk_create(new_entities=[], overrides={})
-      post("/entity.create", query: defaults.
+      post("/entity.bulkCreate", query: defaults.
         merge(overrides).
-        merge(all_attributes: new_entites.to_json))
+        merge(all_attributes: new_entities.to_json))
     end
 
     # https://janraincapture.com/docs/api_entity.delete.html

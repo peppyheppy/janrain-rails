@@ -42,16 +42,49 @@ module Janrain::Capture::User
 
   def persist_to_capture(only_changes = false)
     params = self.to_capture(only_changes)
-    if not params.blank?
+    if params.present?
       response = {}
-      if capture_id.blank?
-        response = Janrain::Capture::Client::Entity.create(params) unless params.blank?
-      else
+      existing_user = nil
+      email_existing = Janrain::Capture::Client::Entity.find("email = '#{email}'")['results'].first
+
+      # new user in local system will update remote capture and set capture_id if remote
+      #   - capture_id is nil; existing is set; existing_user is nil
+      #
+      # new user in both systems will create new capture and set capture_id
+      #   - capture_id is nil; existing is nil; existing_user is nil
+      #
+      # existing in both systems will update capture
+      #   - capture_id is set; existing is set; existing_user is set
+
+      if self.capture_id or email_existing
+        if email_existing and not self.capture_id
+          # verify
+          if existing_user = User.find_by_capture_id(email_existing['id']) and
+            self.id != existing_user.id
+          then
+            raise "Janrain::Capture (user inconsistancy) an attempt to create a duplicate user was made."
+          end
+          self.capture_id = email_existing['id']
+        end
+        # update
         response = Janrain::Capture::Client::Entity.update(capture_id, params)
+      else
+        # create
+        response = Janrain::Capture::Client::Entity.create(params)
+        self.capture_id = response['id']
       end
-      response['stat'] == 'ok'
+
+      if response['stat'] == 'ok'
+        if persisted?
+          update_attribute(:capture_id, self.capture_id)
+        else
+          self[:capture_id] = self.capture_id
+        end
+      end
+      # return capture id
+      self.capture_id
     else
-      true # nothing to update
+      self.capture_id # nothing to update
     end
   end
 

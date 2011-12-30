@@ -29,28 +29,34 @@ describe TestUser do
 
       it "should send all new attributes to capture" do
         user = TestUser.new(@user_params.merge(capture_id: nil, email: 'newuser@valid.com'))
-        user.persist_to_capture.should be_true
+        user.persist_to_capture.should == 978
       end
 
       it "should send all new attributes to capture" do
         user = TestUser.new(@user_params.merge(capture_id: nil, email: 'newuser@invalid.com'))
-        user.persist_to_capture.should be_false
+        user.persist_to_capture.should be_nil
       end
 
     end
 
     context "update existing user" do
 
+      it "should not update capture if there are not any changes" do
+        user = TestUser.create(@user_params)
+        # Note: no changes have been made
+        user.persist_to_capture(only_changes = true).should == 1
+      end
+
       it "should send changed attributes to capture VALID" do
         user = TestUser.create(@user_params)
         user.email = 'existinguser@valid.com'
-        user.persist_to_capture(only_changes = true).should be_true
+        user.persist_to_capture(only_changes = true).should == 1
       end
 
       it "should send changed attributes to capture INVALID" do
         user = TestUser.create(@user_params)
         user.email = 'existinguser@invalid.com'
-        user.persist_to_capture(only_changes = true).should be_false
+        user.persist_to_capture(only_changes = true).should == 1
       end
 
     end

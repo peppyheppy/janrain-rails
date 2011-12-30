@@ -9,6 +9,10 @@ class JanrainAPI
     when /\/oauth\/token.*code=a_valid_code/
       [200, {"Content-Type" => "application/json"}, ['{"access_token":"a_valid_token","expires_in":3600,"refresh_token":"ajwym5c4f3c3bj6w92sb","stat":"ok","transaction_state":{"capture":{"action":"token_url_2","session_expires":null},"engage":{"identifier":"https://www.google.com/profiles/104030799970740279255","providerName":"Google"}}}']]
     # /entity | with auth_token header
+    when /\/entity.find.*newuser%40(in)?valid.*/
+      [200, {"Content-Type" => "application/json"}, ['{"result_count":0,"results":[],"stat":"ok"}']]
+    when /\/entity.find.*existinguser%40(in)?valid.*/
+      [200, {"Content-Type" => "application/json"}, ['{"result_count":1,"results":[{"bio":null,"birthDate":"1900-01-01","birthday":null,"country":null,"created":"2011-12-29 19:27:11.436142 +0000","display":null,"displayName":null,"email":"existinguser@valid.com","firstName":null,"gender":"male","id":308099,"permissions":4,"preferences":0,"upperGenreBounds":null,"uuid":"995d75c2-1118-4b6e-bd63-b46d735346c4"}],"stat":"ok"}']]
     when /\/entity.update.*existinguser%40valid.*/
       [200, {"Content-Type" => "application/json"}, ['{"stat":"ok"}']]
     when /\/entity.update.*existinguser%40invalid.*/ #
