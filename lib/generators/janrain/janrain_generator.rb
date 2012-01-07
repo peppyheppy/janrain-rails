@@ -38,7 +38,8 @@ class JanrainGenerator < Rails::Generators::NamedBase
   bitfield :permissions,
     1 => :admin,
     2 => :superuser
-  bitfield :preferences # add any local preferences here
+  bitfield :flags, # add any local preferences here
+    1 => :failed
    CONTENT
   end
 

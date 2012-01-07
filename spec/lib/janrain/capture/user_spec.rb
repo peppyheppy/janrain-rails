@@ -4,6 +4,7 @@ describe TestUser do
   it { should respond_to :entity= }
   it { should respond_to :oauth= }
   it { should respond_to :admin? }
+  it { should respond_to :failed? }
   it { should respond_to :superuser? }
   it { should respond_to :change_privileges }
   it { should respond_to :to_capture }
@@ -19,7 +20,7 @@ describe TestUser do
       capture_id: "1",
       about_me: "hi there",
       display_name: "my name",
-      email: "myname@myco.com",
+      email: "newuser@valid.com",
       last_login: Time.now,
     }
   end
@@ -28,7 +29,7 @@ describe TestUser do
     context "new capture user" do
 
       it "should send all new attributes to capture" do
-        user = TestUser.new(@user_params.merge(capture_id: nil, email: 'newuser@valid.com'))
+        user = TestUser.new(@user_params.merge(capture_id: nil))
         user.persist_to_capture.should == 978
       end
 
@@ -40,6 +41,11 @@ describe TestUser do
     end
 
     context "update existing user" do
+
+      it "should call persist to capture on save" do
+        TestUser.any_instance.should_receive(:persist_to_capture).with(only_changes = true, persist = false)
+        TestUser.create(@user_params)
+      end
 
       it "should not update capture if there are not any changes" do
         user = TestUser.create(@user_params)
@@ -57,6 +63,21 @@ describe TestUser do
         user = TestUser.create(@user_params)
         user.email = 'existinguser@invalid.com'
         user.persist_to_capture(only_changes = true).should == 1
+      end
+
+      it "should set the failed attribute if update is unsuccessful" do
+        user = TestUser.create(@user_params)
+        user.email = 'existinguser@invalid.com'
+        user.persist_to_capture(only_changes = true)
+        user.should be_failed
+      end
+
+      it "should unset the failes attribute if update is successful" do
+        user = TestUser.create(@user_params.merge(failed: true))
+        user.failed.should be_true
+        user.email = 'existinguser@valid.com'
+        user.persist_to_capture(only_changes = true)
+        user.failed.should be_false
       end
 
     end
@@ -216,6 +237,8 @@ describe TestUser do
           'emailVerified' => '2011-11-05 19:00:08.339082 +0000',
           'lastLogin' => '2011-11-05 19:00:08.339082 +0000',
           'lastUpdated' => '2011-11-05 19:00:08.339082 +0000',
+          'permissions' => nil,
+          'flags' => nil,
         }
       }
       @entity_result = @entity_params['result']
@@ -237,6 +260,11 @@ describe TestUser do
 
     it "should support field mapping overrides" do
       @user.birthdate.should == @entity_result['birthday']
+    end
+
+    it "should default the permissions and flags to zero" do
+      @user.flags.should be_zero
+      @user.permissions.should be_zero
     end
 
   end

@@ -2,6 +2,8 @@ module Janrain::Capture::User
   extend ActiveSupport::Concern
 
   included do
+    before_validation :default_permissions_and_flags_if_nil
+    before_save :update_capture_with_changes
   end
 
   module ClassMethods
@@ -40,51 +42,67 @@ module Janrain::Capture::User
     attrs
   end
 
-  def persist_to_capture(only_changes = false)
-    params = self.to_capture(only_changes)
-    if params.present?
-      response = {}
-      existing_user = nil
-      email_existing = Janrain::Capture::Client::Entity.find("email = '#{email}'")['results'].first
+  def persist_to_capture(only_changes = false,  persist = true)
+    begin
+      params = self.to_capture(only_changes)
+      if params.present?
+        response = {}
+        existing_user = nil
+        email_existing = Janrain::Capture::Client::Entity.find("email = '#{email}'")['results'].first
 
-      # new user in local system will update remote capture and set capture_id if remote
-      #   - capture_id is nil; existing is set; existing_user is nil
-      #
-      # new user in both systems will create new capture and set capture_id
-      #   - capture_id is nil; existing is nil; existing_user is nil
-      #
-      # existing in both systems will update capture
-      #   - capture_id is set; existing is set; existing_user is set
+        # new user in local system will update remote capture and set capture_id if remote
+        #   - capture_id is nil; existing is set; existing_user is nil
+        #
+        # new user in both systems will create new capture and set capture_id
+        #   - capture_id is nil; existing is nil; existing_user is nil
+        #
+        # existing in both systems will update capture
+        #   - capture_id is set; existing is set; existing_user is set
 
-      if self.capture_id or email_existing
-        if email_existing and not self.capture_id
-          # verify
-          if existing_user = User.find_by_capture_id(email_existing['id']) and
-            self.id != existing_user.id
-          then
-            raise "Janrain::Capture (user inconsistancy) an attempt to create a duplicate user was made."
+        if self.capture_id or email_existing
+          if email_existing and not self.capture_id
+            # verify
+            if existing_user = User.find_by_capture_id(email_existing['id']) and
+              self.id != existing_user.id
+            then
+              raise "Janrain::Capture (user inconsistancy) an attempt to create a duplicate user was made."
+            end
+            self.capture_id = email_existing['id']
           end
-          self.capture_id = email_existing['id']
-        end
-        # update
-        response = Janrain::Capture::Client::Entity.update(capture_id, params)
-      else
-        # create
-        response = Janrain::Capture::Client::Entity.create(params)
-        self.capture_id = response['id']
-      end
-
-      if response['stat'] == 'ok'
-        if persisted?
-          update_attribute(:capture_id, self.capture_id)
+          # update
+          response = Janrain::Capture::Client::Entity.update(capture_id, params)
         else
-          self[:capture_id] = self.capture_id
+          # create
+          response = Janrain::Capture::Client::Entity.create(params)
+          self.capture_id = response['id']
         end
+
+        if persisted? and persist
+          if response['stat'] == 'ok'
+            update_attribute(:failed, false)
+            update_attribute(:capture_id, self.capture_id)
+          else
+            update_attribute(:failed, true)
+          end
+        else
+          if response['stat'] == 'ok'
+            self[:failed] = false
+            self[:capture_id] = self.capture_id
+          else
+            self[:failed] = true
+          end
+        end
+        # return capture id
+        self.capture_id
+      else
+        self.capture_id # nothing to update
       end
-      # return capture id
-      self.capture_id
-    else
-      self.capture_id # nothing to update
+    rescue
+      if persisted? and persist
+        update_attribute(:failed, true)
+      else
+        self[:failed] = true
+      end
     end
   end
 
@@ -136,4 +154,14 @@ module Janrain::Capture::User
   end
 
   private
+
+  def update_capture_with_changes
+    persist_to_capture(only_changes = true, persist = false)
+  end
+
+  def default_permissions_and_flags_if_nil
+    self[:permissions] = 0 if permissions.blank?
+    self[:flags]= 0 if flags.blank?
+  end
+
 end

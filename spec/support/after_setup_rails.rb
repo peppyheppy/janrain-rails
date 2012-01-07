@@ -8,7 +8,8 @@ class TestUser < ActiveRecord::Base
   bitfield :permissions,
     1 => :admin,
     2 => :superuser
-  bitfield :preferences # add any local preferences here
+  bitfield :flags,
+    1 => :failed # add any local preferences here
 end
 
 # create the application controller that would otherwise be

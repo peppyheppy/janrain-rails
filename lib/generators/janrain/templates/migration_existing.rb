@@ -2,7 +2,7 @@ class AddJanrainTo<%= table_name.camelize %> < ActiveRecord::Migration
   def self.up
     change_table(:<%= table_name %>) do |t|
       t.integer :capture_id, unique: true, null: false
-      t.integer :preferences, :default => 0
+      t.integer :flags, :default => 0
       t.integer :permissions, :default => 0
       t.string :email, null: false
       t.string :display_name, null: false

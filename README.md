@@ -114,7 +114,6 @@ Janrain::Authentication
 
 # TODO: 
 
-  * create a new configuration for default schema name (type_name)
   * add flag for capture update failures, etc *flags*
   * save the janrain entity attributes in model as cache @user.some_field
   * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"

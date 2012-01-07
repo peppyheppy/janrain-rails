@@ -18,7 +18,7 @@ class CreateTestUserModel < ActiveRecord::Migration
   def self.up
     create_table :test_users do |t|
       t.integer  :capture_id, null: false
-      t.integer  :preferences, default: 0
+      t.integer  :flags, default: 0
       t.integer  :permissions, default: 0
       # entity fields on convention
       t.string   :email, null: false

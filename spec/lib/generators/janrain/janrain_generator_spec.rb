@@ -53,7 +53,7 @@ describe JanrainGenerator do
             contains "include Janrain::Capture::User"
             contains "include Bitfields"
             contains "bitfield :permissions,"
-            contains "bitfield :permissions,"
+            contains "bitfield :flags,"
             contains ":admin"
             contains ":superuser"
             contains "end"

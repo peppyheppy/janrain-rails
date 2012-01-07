@@ -12,11 +12,15 @@ class JanrainAPI
     when /\/entity.find.*newuser%40(in)?valid.*/
       [200, {"Content-Type" => "application/json"}, ['{"result_count":0,"results":[],"stat":"ok"}']]
     when /\/entity.find.*existinguser%40(in)?valid.*/
-      [200, {"Content-Type" => "application/json"}, ['{"result_count":1,"results":[{"bio":null,"birthDate":"1900-01-01","birthday":null,"country":null,"created":"2011-12-29 19:27:11.436142 +0000","display":null,"displayName":null,"email":"existinguser@valid.com","firstName":null,"gender":"male","id":308099,"permissions":4,"preferences":0,"upperGenreBounds":null,"uuid":"995d75c2-1118-4b6e-bd63-b46d735346c4"}],"stat":"ok"}']]
+      [200, {"Content-Type" => "application/json"}, ['{"result_count":1,"results":[{"bio":null,"birthDate":"1900-01-01","birthday":null,"country":null,"created":"2011-12-29 19:27:11.436142 +0000","display":null,"displayName":null,"email":"existinguser@valid.com","firstName":null,"gender":"male","id":308099,"permissions":4,"flags":0,"upperGenreBounds":null,"uuid":"995d75c2-1118-4b6e-bd63-b46d735346c4"}],"stat":"ok"}']]
+    when /\/entity.find.*/ # this is for allowing all user.save/update's to be successful, etc
+      [200, {"Content-Type" => "application/json"}, ['{"result_count":1,"results":[{"bio":null,"birthDate":"1900-01-01","birthday":null,"country":null,"created":"2011-12-29 19:27:11.436142 +0000","display":null,"displayName":null,"email":"existinguser@valid.com","firstName":null,"gender":"male","id":308099,"permissions":4,"flags":0,"upperGenreBounds":null,"uuid":"995d75c2-1118-4b6e-bd63-b46d735346c4"}],"stat":"ok"}']]
     when /\/entity.update.*existinguser%40valid.*/
       [200, {"Content-Type" => "application/json"}, ['{"stat":"ok"}']]
     when /\/entity.update.*existinguser%40invalid.*/ #
       [200, {"Content-Type" => "application/json"}, ['{"attribute_name":"/firstNames","code":223,"error":"unknown_attribute","error_description":"attribute does not exist: /firstNames","stat":"error"}']]
+    when /\/entity.update.*/ # this is for allowing all user.save/update's to be successful, etc
+      [200, {"Content-Type" => "application/json"}, ['{"stat":"ok"}']]
     when /\/entity.create.*newuser%40valid.*/
       [200, {"Content-Type" => "application/json"}, ['{"id":978,"stat":"ok","uuid":"300d7ad1-b280-44bc-8441-da140ef6a506"}']]
     when /\/entity.create.*newuser%40invalid.*/ #
