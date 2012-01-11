@@ -28,6 +28,7 @@ module Janrain::Capture::User
     else
       self.attributes.dup
     end
+
     attrs = dup_attributes.inject({}) do |all, (key, value)|
       capture_key = (Janrain::Config.capture.entity['mappings'].key(key) || key).to_s
       unless (Janrain::Config.capture.entity['ignore_columns'] || []).include?(capture_key)
@@ -38,6 +39,8 @@ module Janrain::Capture::User
 
     if capture_id.blank?
       attrs.delete_if { |a,v| a == 'id' || a == 'capture_id' }
+    else
+      attrs.delete_if { |a,v| a == 'id' }
     end
     attrs
   end
@@ -97,7 +100,7 @@ module Janrain::Capture::User
       else
         self.capture_id # nothing to update
       end
-    rescue
+    rescue => e
       if persisted? and persist
         update_attribute(:failed, true)
       else
