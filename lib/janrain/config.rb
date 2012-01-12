@@ -25,7 +25,7 @@ class Janrain::Config
     options.symbolize_keys!
     uri = URI.parse(options.delete(:url) || capture.redirect_url)
     if host = options.delete(:host)
-      uri.host = host
+      uri.host = host.split(':').first
     end
     if return_to = options.delete(:return_to)
       delim = uri.query.blank? ? '' : '&'
