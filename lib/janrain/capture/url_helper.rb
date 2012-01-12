@@ -8,21 +8,21 @@ module Janrain::Capture::UrlHelper
   end
 
   def janrain_signin_url(options={})
-    "#{capture_config.domain}/oauth/signin?response_type=code&redirect_uri=#{janrain_redirect_url(options)}&client_id=#{capture_config.client_id}&xd_receiver=http%3A//#{request.host}/xdcomm.html"
+    "#{capture_config.domain}/oauth/signin?response_type=code&redirect_uri=#{janrain_redirect_url(options)}&client_id=#{capture_config.client_id}&xd_receiver=http%3A//#{request.host_with_port}/xdcomm.html"
   end
 
   def janrain_signup_url(options={})
-    "#{capture_config.domain}/oauth/legacy_register?response_type=code&redirect_uri=#{janrain_redirect_url(options)}&client_id=#{capture_config.client_id}&xd_receiver=http%3A//#{request.host}/xdcomm.html"
+    "#{capture_config.domain}/oauth/legacy_register?response_type=code&redirect_uri=#{janrain_redirect_url(options)}&client_id=#{capture_config.client_id}&xd_receiver=http%3A//#{request.host_with_port}/xdcomm.html"
   end
 
   def janrain_edit_profile_url(user)
-    "#{capture_config.domain}/oauth/profile?access_token=#{user.try(:access_token)}&callback=closeProfileEditor&xd_receiver=http%3A//#{request.host}/xdcomm.html"
+    "#{capture_config.domain}/oauth/profile?access_token=#{user.try(:access_token)}&callback=closeProfileEditor&xd_receiver=http%3A//#{request.host_with_port}/xdcomm.html"
   end
 
   private
 
   def janrain_redirect_url(options={})
-    CGI.escape(Janrain::Config.redirect_url({host:request.host}.merge(options)))
+    CGI.escape(Janrain::Config.redirect_url({host:request.host_with_port}.merge(options)))
   end
 
   def capture_config

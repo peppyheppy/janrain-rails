@@ -39,8 +39,6 @@ module Janrain::Capture::User
 
     if capture_id.blank?
       attrs.delete_if { |a,v| a == 'id' || a == 'capture_id' }
-    else
-      attrs.delete_if { |a,v| a == 'id' }
     end
     attrs
   end

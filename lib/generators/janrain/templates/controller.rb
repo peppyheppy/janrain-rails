@@ -3,7 +3,7 @@ class <%= controller_name.camelize %>Controller < ApplicationController
   end
 
   def create
-    if @<%= singular_name %> = <%= class_name %>.authenticate(params[:code], host: request.host)
+    if @<%= singular_name %> = <%= class_name %>.authenticate(params[:code], host: request.host_with_port)
       sign_in @<%= singular_name %>
       flash[:notice] = 'You are now signed in'
     else
