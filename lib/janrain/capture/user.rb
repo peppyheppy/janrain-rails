@@ -20,6 +20,19 @@ module Janrain::Capture::User
       end
       false
     end
+
+    def password_parser(stuff)
+      parsed_password = {}
+      begin
+        password = JSON.load(stuff) rescue YAML.load(stuff) rescue {}
+        if password.is_a? Hash
+          parsed_password = password
+        end
+      rescue => e
+        parsed_password = {}
+      end
+      parsed_password
+    end
   end
 
   def to_capture(only_changes=false)
@@ -37,9 +50,7 @@ module Janrain::Capture::User
       all
     end
 
-    if capture_id.blank?
-      attrs.delete_if { |a,v| a == 'id' || a == 'capture_id'}
-    end
+    attrs.delete_if { |a,v| a == 'id' || a == 'capture_id'}
     attrs
   end
 

@@ -9,18 +9,20 @@ module Janrain::Capture::Client
 
     # https://janraincapture.com/docs/api_entity.html
     def self.by_token(token, options={})
-      get("/entity", headers: { 'Authorization' => "OAuth #{token}" })
+      logres(get("/entity", headers: { 'Authorization' => "OAuth #{token}" }))
     end
 
     # https://janraincapture.com/docs/api_entity.html
     def self.by_id(id, overrides={})
       attrs = defaults.merge(overrides)
-      get("/entity", query: attrs.merge(id: id))
+      logreq(attrs.merge(id: id))
+      logres(get("/entity", query: attrs.merge(id: id)))
     end
 
     # https://janraincapture.com/docs/api_entity.count.html
     def self.count(overrides={})
-      get("/entity.count", query: defaults.merge(overrides))
+      logreq(defaults.merge(overrides))
+      logres(get("/entity.count", query: defaults.merge(overrides)))
     end
 
     # https://janraincapture.com/docs/api_entity.create.html
@@ -30,15 +32,16 @@ module Janrain::Capture::Client
       if type_name = attrs.delete(:type_name)
         params = defaults.merge(type_name: type_name)
       end
-      post("/entity.create", query: params.merge(attributes: attrs.to_json))
+      logreq(params.merge(attributes: attrs.to_json))
+      logres(post("/entity.create", query: params.merge(attributes: attrs.to_json)))
     end
 
     # https://janraincapture.com/docs/api_entity.bulkCreate.html
     # returns an array of ids and/or errors
     def self.bulk_create(new_entities=[], overrides={})
-      post("/entity.bulkCreate", query: defaults.
-        merge(overrides).
-        merge(all_attributes: new_entities.to_json))
+      query = defaults.merge(overrides).merge(all_attributes: new_entities.to_json)
+      logreq(query)
+      logres(post("/entity.bulkCreate", query: query))
     end
 
     # https://janraincapture.com/docs/api_entity.delete.html
@@ -46,7 +49,8 @@ module Janrain::Capture::Client
     # checks. Its a sharp delete -- don't hurt yourself!
     def self.delete(id, overrides={})
       attrs = defaults.merge(overrides)
-      post("/entity.delete", query: attrs.merge(id: id))
+      logreq(attrs.merge(id: id))
+      logres(post("/entity.delete", query: attrs.merge(id: id)))
     end
 
     # https://janraincapture.com/docs/api_entity.update.html
@@ -56,7 +60,9 @@ module Janrain::Capture::Client
       if type_name = attrs.delete(:type_name)
         params = defaults.merge(type_name: type_name)
       end
-      post("/entity.update", query: params.merge(id: id, attributes: attrs.to_json))
+      query = params.merge(id: id, attributes: attrs.to_json)
+      logreq(query)
+      logres(post("/entity.update", query: query))
     end
 
     # XXX: not supporting replace.... don't have a real case for it yet
@@ -65,10 +71,20 @@ module Janrain::Capture::Client
     # https://janraincapture.com/docs/api_entity.find.html
     def self.find(filter, options={})
       params = defaults.merge(filter: filter).merge(options)
-      get('/entity.find', query: params)
+      logreq(params)
+      logres(get('/entity.find', query: params))
     end
 
     private
+
+    def self.logreq(attrs)
+      Rails.logger.info("Janrain::Entity Request: (#{caller.first.split(':in ').last}) #{attrs.inspect}")
+    end
+
+    def self.logres(response)
+      Rails.logger.info("Janrain::Entity Response: (#{caller.first.split(':in ').last}) #{response.body}")
+      response
+    end
 
     def self.defaults
       {
