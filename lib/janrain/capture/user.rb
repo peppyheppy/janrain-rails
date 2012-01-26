@@ -49,8 +49,10 @@ module Janrain::Capture::User
       end
       all
     end
-
-    attrs.delete_if { |a,v| a == 'id' || a == 'capture_id'}
+    # don't send over bitfield name/values, rather udpate the
+    # actual bitfield value i.e. send flags = 3
+    remove_attributes = self.class.bitfields.map { |b,f| f.stringify_keys.keys }.flatten
+    attrs.delete_if { |a,v| a == 'id' || a == 'capture_id' || remove_attributes.include?(a) }
     attrs
   end
 
