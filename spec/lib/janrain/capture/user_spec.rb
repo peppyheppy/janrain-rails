@@ -242,6 +242,34 @@ describe TestUser do
     it "should not authenticate with an invalid code" do
       TestUser.authenticate('an_invalid_code').should be_false
     end
+
+    context "post authenticate hooks" do
+
+      before :each do
+        class TestUser
+          private
+          def self.post_authentication_hook(user, entity, oauth)
+            raise SecurityError.new("THIS IS RAISED FROM THE HOOK")
+          end
+        end
+      end
+
+      after :each do
+        class TestUser
+          private
+          def self.post_authentication_hook(user, entity, oauth)
+            user
+          end
+        end
+      end
+
+      it "should run post authenticate hooks" do
+        expect {
+          TestUser.authenticate('a_valid_code')
+        }.to raise_error(SecurityError)
+      end
+    end
+
   end
 
   describe "user session (oauth)" do

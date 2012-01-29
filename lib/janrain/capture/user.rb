@@ -15,7 +15,8 @@ module Janrain::Capture::User
         entity = Client::Entity.by_token(oauth['access_token'])
         user = find_or_initialize_by_capture_id(entity['result']['id'])
         if user.update_attributes(entity: entity, oauth: oauth)
-          return user
+          # hook should always return the user
+          return post_authentication_hook(user, entity, oauth)
         end
       end
       false
@@ -32,6 +33,12 @@ module Janrain::Capture::User
         parsed_password = {}
       end
       parsed_password
+    end
+
+    private
+
+    def post_authentication_hook(user, entity, oauth)
+      user # should always return the user
     end
   end
 

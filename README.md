@@ -33,6 +33,15 @@ Local User model properties:
     User#any_local_field # => a local field that is not shared accross federated apps
     User#display_name # => a local cache for the capture value that will be updated on each profile request.
 
+After Authentication Hook:
+
+    def self.post_authentication_hook(user, entity, oauth)
+      ... do something with the user and the entity from janrain, etc ...
+      user
+    end
+
+Note: this could be used for post processing profile information or something.
+
 # Controllers
 
 We will need to implement the authentication on controllers so we can ensure that
@@ -114,7 +123,7 @@ Janrain::Authentication
 
 # TODO: 
 
-  * add flag for capture update failures, etc *flags*
+  * add user.capture for fetching and returning the capture info
   * save the janrain entity attributes in model as cache @user.some_field
   * create configuration for capture (split out resource/application configs from environment keys and secrets, etc) "resource_name"
   * capture status for model (contains time left, etc)
