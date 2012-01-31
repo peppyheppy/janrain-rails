@@ -16,7 +16,7 @@ module Janrain::Capture::UrlHelper
   end
 
   def janrain_edit_profile_url(user)
-    "#{capture_config.domain}/oauth/profile?access_token=#{user.try(:access_token)}&callback=closeProfileEditor&xd_receiver=http%3A//#{request.host_with_port}/xdcomm.html"
+    "#{capture_config.domain}/oauth/profile?access_token=#{user.try(:access_token)}&callback=CAPTURE.closeProfileEditor&xd_receiver=http%3A//#{request.host_with_port}/xdcomm.html"
   end
 
   private
