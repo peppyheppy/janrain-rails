@@ -55,7 +55,7 @@ module Janrain::Capture::User
   end
 
   def refresh_authentication!
-    if user = self.class.authenticate(refresh_token, query: { grant_type: 'refresh_token' })
+    if user = self.class.authenticate(refresh_token, query: { grant_type: 'refresh_token', refresh_token: refresh_token })
       reload
     end
     user
