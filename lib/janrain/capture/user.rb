@@ -25,7 +25,15 @@ module Janrain::Capture::User
     def password_parser(stuff)
       parsed_password = {}
       begin
-        password = JSON.load(stuff) rescue YAML.load(stuff) rescue {}
+        password = begin
+          JSON.load(stuff)
+        rescue Exception => e
+          begin
+            YAML.load(stuff)
+          rescue Exception => e
+            {}
+          end
+        end
         if password.is_a? Hash
           parsed_password = password
         end
@@ -40,6 +48,19 @@ module Janrain::Capture::User
     def post_authentication_hook(user, entity, oauth)
       user # should always return the user
     end
+  end
+
+  def expired?
+    if (!expires_at or expires_at <= Time.now) or refresh_token.blank?
+      true
+    end
+  end
+
+  def refresh_authentication!
+    if user = self.class.authenticate(refresh_token, query: { grant_type: 'refresh_token' })
+      reload
+    end
+    user
   end
 
   def to_capture(only_changes=false)

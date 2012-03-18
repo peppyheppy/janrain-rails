@@ -232,6 +232,57 @@ describe TestUser do
     end
   end
 
+  describe "token expired" do
+    it "should be expired if token is expired" do
+      @user  = TestUser.create(
+        @user_params.merge(
+          expires_at: (Time.now - 500),
+          refresh_token: 'a_valid_token',
+        )
+      )
+      @user.should be_expired
+    end
+
+    it "should be expired if refresh token is nil" do
+      @user  = TestUser.create(
+        @user_params.merge(
+          expires_at: (Time.now + 500),
+          refresh_token: nil,
+        )
+      )
+      @user.should be_expired
+    end
+
+    it "should not be expired if token is present and expires at date is in the future" do
+      @user  = TestUser.create(
+        @user_params.merge(
+          expires_at: (Time.now + 500),
+          refresh_token: 'a_valid_token',
+        )
+      )
+      @user.expired?.should be_false
+      @user.should_not be_expired
+    end
+  end
+
+  describe "refresh authentication" do
+    it "should refresh token if expired" do
+      expired_at = (Time.now - 500)
+      @user = TestUser.create(
+        @user_params.merge(
+          expires_at: expired_at,
+          access_token: 'access_token',
+          refresh_token: 'a_valid_code',
+        )
+      )
+      TestUser.stub(:find_or_initialize_by_capture_id).and_return(@user)
+      @user.refresh_authentication!.id.should == @user.id
+      @user.access_token.should_not == 'access_token'
+      @user.access_token.should == 'a_valid_token'
+      @user.expires_at.should_not == expired_at
+    end
+  end
+
   describe "authenticate" do
     it "should override the host name with an options to authenticate"
 
