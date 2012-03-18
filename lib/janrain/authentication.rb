@@ -7,6 +7,8 @@ module Janrain::Authentication
 
   def current_user
     @current_user ||= Janrain::Config.model.find_by_id(session[:session_user]) if session[:session_user]
+    @current_user = @current_user.refresh_authentication! if @current_user and @current_user.expired?
+    @current_user
   end
 
   def user_signed_in?

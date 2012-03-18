@@ -39,7 +39,13 @@ describe SessionController, type: :controller do
 
   context "signout / destroy" do
     before :each do
-      @user = TestUser.create(capture_id: 1, email: 'paul@hdawg.com', display_name: 'P-Dawg')
+      @user = TestUser.create(
+        capture_id: 1,
+        email: 'paul@hdawg.com',
+        display_name: 'P-Dawg',
+        refresh_token: 'a_valid_code',
+        expires_at: Time.now + 1.year,
+      )
       sign_in_as @user
       controller.should be_user_signed_in
     end

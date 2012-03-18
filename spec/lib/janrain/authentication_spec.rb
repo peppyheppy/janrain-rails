@@ -91,9 +91,35 @@ describe FoobarsController, type: :controller do
     it_behaves_like "a non admin user"
   end
 
+  context "refresh authentication on current user fetch" do
+    before :each do
+      @user = TestUser.create(
+        capture_id: 1,
+        email: 'paul@hdawg.com',
+        display_name: 'P-Dawg',
+        access_token: 'expired',
+        refresh_token: 'a_valid_code',
+        expires_at: Time.now - 1.day,
+      )
+      sign_in_as @user
+    end
+
+    it "should renew authentication" do
+      get :reqular_login_required
+      controller.current_user.access_token.should == 'a_valid_token'
+      response.should_not redirect_to new_janrain_session_url
+    end
+  end
+
   context "regular signed in user" do
     before :each do
-      @user = TestUser.create(capture_id: 1, email: 'paul@hdawg.com', display_name: 'P-Dawg')
+      @user = TestUser.create(
+        capture_id: 1,
+        email: 'paul@hdawg.com',
+        display_name: 'P-Dawg',
+        refresh_token: 'a_valid_code',
+        expires_at: Time.now + 1.year,
+      )
       sign_in_as @user
     end
 
@@ -105,7 +131,14 @@ describe FoobarsController, type: :controller do
 
   context "an admin user" do
     before :each do
-      @user = TestUser.create(capture_id: 1, admin: true, email: 'paul@hdawg.com', display_name: 'P-Dawg')
+      @user = TestUser.create(
+        capture_id: 1,
+        admin: true,
+        email: 'paul@hdawg.com',
+        display_name: 'P-Dawg',
+        refresh_token: 'a_valid_code',
+        expires_at: Time.now + 1.year,
+      )
       sign_in_as @user
     end
 
@@ -117,7 +150,15 @@ describe FoobarsController, type: :controller do
 
   context "a super user" do
     before :each do
-      @user = TestUser.create(capture_id: 1, admin: true, superuser: true, email: 'paul@hdawg.com', display_name: 'P-Dawg')
+      @user = TestUser.create(
+        capture_id: 1,
+        admin: true,
+        superuser: true,
+        email: 'paul@hdawg.com',
+        display_name: 'P-Dawg',
+        refresh_token: 'a_valid_code',
+        expires_at: Time.now + 1.year,
+      )
       sign_in_as @user
     end
 
