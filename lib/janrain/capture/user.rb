@@ -51,9 +51,7 @@ module Janrain::Capture::User
   end
 
   def expired?
-    if (!expires_at or expires_at <= Time.now) or refresh_token.blank?
-      true
-    end
+    ((!expires_at or expires_at <= Time.now) or refresh_token.blank?) ? true : false
   end
 
   def refresh_authentication!
