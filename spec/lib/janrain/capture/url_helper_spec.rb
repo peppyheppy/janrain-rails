@@ -15,7 +15,7 @@ describe ApplicationController, "url helpers", type: :controller do
   end
 
   it "should have janrain edit profile url" do
-    controller.janrain_edit_profile_url(TestUser.new).should == 'https://asite.dev.janraincapture.com/oauth/profile?access_token=&callback=closeProfileEditor&xd_receiver=http%3A//test.host/xdcomm.html'
+    controller.janrain_edit_profile_url(TestUser.new).should == 'https://asite.dev.janraincapture.com/oauth/profile?access_token=&callback=CAPTURE.closeProfileEditor&xd_receiver=http%3A//test.host/xdcomm.html'
   end
 
   it "should have logout url from routes" do
