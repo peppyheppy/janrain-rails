@@ -27,9 +27,9 @@ class Janrain::Config
     if host = options.delete(:host)
       uri.host = host.split(':').first
     end
-    if return_to = options.delete(:return_to)
+    if origin = options.delete(:origin)
       delim = uri.query.blank? ? '' : '&'
-      uri.query = "#{uri.query}#{delim}return_to=#{CGI.escape(return_to)}"
+      uri.query = "#{uri.query}#{delim}origin=#{CGI.escape(origin)}"
     end
     uri.to_s
   end
