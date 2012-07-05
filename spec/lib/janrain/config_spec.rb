@@ -42,8 +42,8 @@ describe Janrain::Config do
         Config.redirect_url(host:'www.other.host.com').should include '://www.other.host.com'
       end
 
-      it "should have redirect url that takes a return_to parameter as an option" do
-        Config.redirect_url(return_to:'http://www.other.host.com/?a=1#b=2').should include 'http://mysite.com/auth?return_to=http%3A%2F%2Fwww.other.host.com%2F%3Fa%3D1%23b%3D2'
+      it "should have redirect url that takes a origin parameter as an option" do
+        Config.redirect_url(origin:'http://www.other.host.com/?a=1#b=2').should include 'http://mysite.com/auth?origin=http%3A%2F%2Fwww.other.host.com%2F%3Fa%3D1%23b%3D2'
       end
     end
 

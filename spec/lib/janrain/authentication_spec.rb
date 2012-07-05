@@ -35,7 +35,7 @@ shared_examples "a non admin user" do
   it "should not be allowed" do
     get :admin_login_required
     flash[:error].should_not be_blank
-    controller.session[:return_to].should == 'http://test.host/foobars/admin_login_required'
+    controller.session[:origin].should == 'http://test.host/foobars/admin_login_required'
     response.should redirect_to new_janrain_session_url
   end
 end
@@ -52,7 +52,7 @@ shared_examples "a non super user" do
   it "should not be allowed" do
     get :super_login_required
     flash[:error].should_not be_blank
-    controller.session[:return_to].should == 'http://test.host/foobars/super_login_required'
+    controller.session[:origin].should == 'http://test.host/foobars/super_login_required'
     response.should redirect_to new_janrain_session_url
   end
 end
@@ -69,7 +69,7 @@ shared_examples "an expected to be logged in user" do
   it "should not be allowed" do
     get :reqular_login_required
     flash[:error].should_not be_blank
-    controller.session[:return_to].should == 'http://test.host/foobars/reqular_login_required'
+    controller.session[:origin].should == 'http://test.host/foobars/reqular_login_required'
     response.should redirect_to new_janrain_session_url
   end
 end

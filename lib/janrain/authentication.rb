@@ -34,8 +34,8 @@ module Janrain::Authentication
   end
 
   def original_or_default_url(default)
-    url = (session[:return_to] || params[:return_to] || default)
-    session[:return_to] = nil
+    url = (session[:origin] || params[:origin] || default)
+    session[:origin] = nil
     url
   end
 
@@ -61,7 +61,7 @@ module Janrain::Authentication
   end
 
   def access_denied
-    session[:return_to] = request.url
+    session[:origin] = request.url
     redirect_to send("new_janrain_#{Janrain::Config.controller.to_s.downcase}_url"), flash: { error: 'The page you requested requires you to be signed in' }
   end
 
